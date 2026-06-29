@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.9 38.6% 7.1%; /* #0B0F19 */
+    --foreground: 210 40% 98%;      /* #F8FAFC */
+
+    --card: 222 27% 12%;           /* #161B26 */
+    --card-foreground: 210 40% 98%;
+
+    --primary: 24.6 95% 53.1%;     /* #F97316 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 24.6 95% 53.1%;   /* #EA580C */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 16.3% 65.1%;      /* #94A3B8 */
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 24.6 95% 53.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-saas-bg text-saas-text font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-cinzel tracking-tight;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  @apply bg-saas-bgSecondary/50 backdrop-blur-md border border-white/10 shadow-xl;
+}
+
+.bronze-gradient-text {
+  @apply bg-gradient-to-r from-saas-primary to-saas-bronze bg-clip-text text-transparent;
+}
+
+.bronze-gradient-bg {
+  @apply bg-gradient-to-r from-saas-primary to-saas-bronze;
+}
