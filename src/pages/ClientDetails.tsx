@@ -23,14 +23,33 @@ export const ClientDetails: React.FC = () => {
   const [selectedStaff, setSelectedStaff] = useState("");
   const [assignmentPriority, setAssignmentPriority] = useState("HIGH");
   const [assignmentNotes, setAssignmentNotes] = useState("");
+  const [assignmentDeadline, setAssignmentDeadline] = useState("");
+  const [assignmentLanguage, setAssignmentLanguage] = useState("Hindi");
+  const [assignmentExpectedDuration, setAssignmentExpectedDuration] = useState("");
+  const [assignmentCategory, setAssignmentCategory] = useState("Standard");
+  const [assignmentUrgency, setAssignmentUrgency] = useState("Normal");
+  const [assignmentRemarks, setAssignmentRemarks] = useState("");
 
   useEffect(() => {
     if (id) {
       apiClient.fetchClientSummary(id).then(data => {
         setSummary(data);
+        const isItr = data.serviceType?.toLowerCase().includes('itr') ?? false;
+        
+        if (!isItr && activeTab === 'tis') {
+            setActiveTab('documents');
+        }
+        
         if (data.feeQuoted) {
           setOverrideFee(data.feeQuoted.toString());
+        } else if (!isItr) {
+          setOverrideFee("2000");
         }
+        
+        if (!isItr && !assignmentNotes) {
+            setAssignmentNotes(`Call krna hai ${data.serviceType} ke liye`);
+        }
+        
         setLoading(false);
       }).catch(e => {
         console.error("Failed to fetch client summary", e);
@@ -88,7 +107,17 @@ export const ClientDetails: React.FC = () => {
         return;
     }
     try {
-        await apiClient.assignTicket(summary.latestTicketId, selectedStaff, assignmentPriority, assignmentNotes);
+        const payload = {
+            priority: assignmentPriority,
+            notes: assignmentNotes,
+            deadline: assignmentDeadline,
+            language: assignmentLanguage,
+            expectedDuration: assignmentExpectedDuration,
+            category: assignmentCategory,
+            urgency: assignmentUrgency,
+            remarks: assignmentRemarks
+        };
+        await apiClient.assignTicket(summary.latestTicketId, selectedStaff, payload);
         alert("Ticket assigned successfully!");
         const data = await apiClient.fetchClientSummary(id!);
         setSummary(data);
@@ -98,12 +127,17 @@ export const ClientDetails: React.FC = () => {
     }
   };
 
+  const isItr = summary.serviceType?.toLowerCase().includes('itr') ?? false;
+
   const tabOptions = [
     { label: 'Documents', value: 'documents', icon: <FileText className="w-4 h-4" /> },
-    { label: 'TIS Data', value: 'tis', icon: <FileText className="w-4 h-4" /> },
-    { label: 'TDS Data', value: 'tds', icon: <FileSearch className="w-4 h-4" /> },
+    ...(isItr ? [
+      { label: 'TIS Data', value: 'tis', icon: <FileText className="w-4 h-4" /> },
+      { label: 'TDS Data', value: 'tds', icon: <FileSearch className="w-4 h-4" /> }
+    ] : []),
     { label: 'Payments', value: 'payments', icon: <IndianRupee className="w-4 h-4" /> },
     { label: 'Assign Work', value: 'assign', icon: <User className="w-4 h-4" /> },
+    { label: 'History', value: 'history', icon: <Info className="w-4 h-4" /> },
   ];
 
   const handleRequestDocument = () => {
@@ -132,7 +166,7 @@ export const ClientDetails: React.FC = () => {
 
   const formatInr = (val: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
   const itrForm = ex.suggestedItr || "ITR-2";
-  const feeQuoted = summary.feeQuoted || 4449;
+  const feeQuoted = summary.feeQuoted || (!isItr ? 2000 : 4449);
   
   const aiAnalysis = summary.aiAnalysis || {};
 
@@ -149,15 +183,22 @@ export const ClientDetails: React.FC = () => {
           <div>
             <div className="flex items-center space-x-4 mb-2">
               <h1 className="text-3xl font-bold font-serif text-white tracking-wide uppercase">{summary.clientProfile.name}</h1>
-              <div className="flex items-center bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30 text-sm font-semibold">
-                <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></div>
-                {isReady ? 'Ready For Review' : 'Missing Documents'}
-              </div>
-              <Badge className="bg-saas-primary/20 text-saas-primary border-saas-primary/30">{itrForm}</Badge>
+              {isItr ? (
+                <>
+                  <div className="flex items-center bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30 text-sm font-semibold">
+                    <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></div>
+                    {isReady ? 'Ready For Review' : 'Missing Documents'}
+                  </div>
+                  <Badge className="bg-saas-primary/20 text-saas-primary border-saas-primary/30">{itrForm}</Badge>
+                </>
+              ) : (
+                <div className="flex items-center bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full border border-blue-500/30 text-sm font-semibold">
+                  {summary.serviceType}
+                </div>
+              )}
             </div>
             <div className="flex items-center space-x-4 text-sm text-saas-muted font-medium">
-              <span className="flex items-center"><Sparkles className="w-4 h-4 mr-1 text-saas-primary" /> Confidence {ex.riskScore === 'Low' ? '98%' : '85%'}</span>
-              <span>•</span>
+              {isItr && <><span className="flex items-center"><Sparkles className="w-4 h-4 mr-1 text-saas-primary" /> Confidence {ex.riskScore === 'Low' ? '98%' : '85%'}</span><span>•</span></>}
               <span>FY {ex.financialYear || '2024-25'}</span>
               <span>•</span>
               <span>Last Updated: Just now</span>
@@ -412,48 +453,58 @@ export const ClientDetails: React.FC = () => {
 
                     {/* AI Reasoning Box */}
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-6">AI Reasoning Engine</h3>
+                      <h3 className="text-xl font-bold text-white mb-6">{isItr ? "AI Reasoning Engine" : "Service Context"}</h3>
                       <div className="bg-saas-primary/5 border border-saas-primary/20 p-6 rounded-2xl relative h-full">
                         <div className="flex items-center space-x-3 mb-4">
                            <div className="p-2 bg-saas-primary/20 rounded-lg">
                              <Sparkles className="w-6 h-6 text-saas-primary" />
                            </div>
-                           <h4 className="text-lg font-bold text-white">Why {itrForm}?</h4>
+                           <h4 className="text-lg font-bold text-white">
+                              {isItr ? `Why ${itrForm}?` : `About ${summary.serviceType}`}
+                           </h4>
                         </div>
                         
                         <div className="prose prose-invert prose-sm">
-                           {aiAnalysis.riskSummary ? (
-                              <p className="text-saas-text leading-relaxed">{aiAnalysis.riskSummary}</p>
+                           {isItr ? (
+                               aiAnalysis.riskSummary ? (
+                                  <p className="text-saas-text leading-relaxed">{aiAnalysis.riskSummary}</p>
+                               ) : (
+                                  <ul className="space-y-3 mt-4">
+                                     {rawJsonObj?.income?.totalCapitalGains > 0 && (
+                                       <li className="flex items-start text-saas-text">
+                                          <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
+                                          <span>Capital Gain of <strong>{formatInr(rawJsonObj.income.totalCapitalGains)}</strong> detected, which mandates {itrForm}.</span>
+                                       </li>
+                                     )}
+                                     {rawJsonObj?.income?.dividend > 0 && (
+                                       <li className="flex items-start text-saas-text">
+                                          <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
+                                          <span>Dividend Income reported.</span>
+                                       </li>
+                                     )}
+                                     <li className="flex items-start text-saas-text">
+                                        <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
+                                        <span>Interest Income across savings & deposits analyzed.</span>
+                                     </li>
+                                     <li className="flex items-start text-saas-text">
+                                        <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
+                                        <span>No Business or Professional Income detected.</span>
+                                     </li>
+                                  </ul>
+                               )
                            ) : (
-                              <ul className="space-y-3 mt-4">
-                                 {rawJsonObj?.income?.totalCapitalGains > 0 && (
-                                   <li className="flex items-start text-saas-text">
-                                      <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
-                                      <span>Capital Gain of <strong>{formatInr(rawJsonObj.income.totalCapitalGains)}</strong> detected, which mandates {itrForm}.</span>
-                                   </li>
-                                 )}
-                                 {rawJsonObj?.income?.dividend > 0 && (
-                                   <li className="flex items-start text-saas-text">
-                                      <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
-                                      <span>Dividend Income reported.</span>
-                                   </li>
-                                 )}
-                                 <li className="flex items-start text-saas-text">
-                                    <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
-                                    <span>Interest Income across savings & deposits analyzed.</span>
-                                 </li>
-                                 <li className="flex items-start text-saas-text">
-                                    <CheckCircle2 className="w-5 h-5 text-saas-primary mr-3 shrink-0 mt-0.5" />
-                                    <span>No Business or Professional Income detected.</span>
-                                 </li>
-                              </ul>
+                               <p className="text-saas-text leading-relaxed">
+                                 This is a {summary.serviceType} request. Standard processing logic applies. Please ensure all required communication is handled via the configured workflow.
+                               </p>
                            )}
                         </div>
                         
-                        <div className="mt-8 flex items-center p-3 bg-white/5 rounded-xl border border-white/10 text-sm text-saas-muted">
-                           <Info className="w-4 h-4 mr-2 text-blue-400" />
-                           Engine has verified AIS & TIS cross-matches.
-                        </div>
+                        {isItr && (
+                            <div className="mt-8 flex items-center p-3 bg-white/5 rounded-xl border border-white/10 text-sm text-saas-muted">
+                               <Info className="w-4 h-4 mr-2 text-blue-400" />
+                               Engine has verified AIS & TIS cross-matches.
+                            </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -487,17 +538,49 @@ export const ClientDetails: React.FC = () => {
                         </select>
                       </div>
 
-                      <div>
-                        <label className="block text-sm text-saas-muted uppercase tracking-wider mb-2">Priority Level</label>
-                        <select 
-                          value={assignmentPriority} 
-                          onChange={(e) => setAssignmentPriority(e.target.value)}
-                          className="w-full bg-black/30 border border-white/20 text-white p-3 rounded-xl outline-none"
-                        >
-                          <option value="HIGH">High Priority</option>
-                          <option value="MEDIUM">Medium Priority</option>
-                          <option value="LOW">Low Priority</option>
-                        </select>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm text-saas-muted uppercase tracking-wider mb-2">Priority Level</label>
+                          <select 
+                            value={assignmentPriority} 
+                            onChange={(e) => setAssignmentPriority(e.target.value)}
+                            className="w-full bg-black/30 border border-white/20 text-white p-3 rounded-xl outline-none"
+                          >
+                            <option value="HIGH">High Priority</option>
+                            <option value="MEDIUM">Medium Priority</option>
+                            <option value="LOW">Low Priority</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm text-saas-muted uppercase tracking-wider mb-2">Deadline</label>
+                          <input 
+                            type="text" 
+                            value={assignmentDeadline}
+                            onChange={(e) => setAssignmentDeadline(e.target.value)}
+                            placeholder="e.g. Tomorrow 5 PM"
+                            className="w-full bg-black/30 border border-white/20 text-white p-3 rounded-xl outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm text-saas-muted uppercase tracking-wider mb-2">Language</label>
+                          <input 
+                            type="text" 
+                            value={assignmentLanguage}
+                            onChange={(e) => setAssignmentLanguage(e.target.value)}
+                            placeholder="e.g. Hindi/English"
+                            className="w-full bg-black/30 border border-white/20 text-white p-3 rounded-xl outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm text-saas-muted uppercase tracking-wider mb-2">Expected Duration</label>
+                          <input 
+                            type="text" 
+                            value={assignmentExpectedDuration}
+                            onChange={(e) => setAssignmentExpectedDuration(e.target.value)}
+                            placeholder="e.g. 2 Hours"
+                            className="w-full bg-black/30 border border-white/20 text-white p-3 rounded-xl outline-none"
+                          />
+                        </div>
                       </div>
 
                       <div>
@@ -517,6 +600,55 @@ export const ClientDetails: React.FC = () => {
                         Assign Ticket
                       </Button>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: HISTORY */}
+              {activeTab === 'history' && (
+                <div className="space-y-6 animate-in fade-in">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Past Service History</h3>
+                      <p className="text-saas-muted">Review previous and ongoing tickets for this client.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-white/10 hover:bg-transparent">
+                          <TableHead className="text-saas-muted">Date</TableHead>
+                          <TableHead className="text-saas-muted">Service Type</TableHead>
+                          <TableHead className="text-saas-muted">Status</TableHead>
+                          <TableHead className="text-saas-muted">Assigned To</TableHead>
+                          <TableHead className="text-saas-muted text-right">Fee Quoted</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {summary?.previousTickets && summary.previousTickets.length > 0 ? (
+                          summary.previousTickets.map((ticket: any) => (
+                            <TableRow key={ticket.id} className="border-white/5 hover:bg-white/5 transition-colors">
+                              <TableCell className="font-medium text-white">{ticket.createdAt || 'N/A'}</TableCell>
+                              <TableCell className="text-saas-text font-medium">{ticket.serviceType}</TableCell>
+                              <TableCell>
+                                <Badge variant="outline" className="border-saas-primary/30 text-saas-primary bg-saas-primary/10">
+                                  {ticket.status}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-saas-text">{ticket.assignedStaffName || 'Unassigned'}</TableCell>
+                              <TableCell className="text-right text-white font-bold">{ticket.fee ? formatInr(ticket.fee) : '-'}</TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                           <TableRow className="border-none hover:bg-transparent">
+                             <TableCell colSpan={5} className="text-center text-saas-muted py-8">
+                               No history found for this client.
+                             </TableCell>
+                           </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
                   </div>
                 </div>
               )}

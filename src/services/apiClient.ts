@@ -40,8 +40,8 @@ export const apiClient = {
     });
     return response.data;
   },
-  assignTicket: async (ticketId: string, staffId: string, priority: string, notes: string) => {
-    const response = await api.post(`/admin/tickets/${ticketId}/assign/${staffId}`, { priority, notes });
+  assignTicket: async (ticketId: string, staffId: string, payload: any) => {
+    const response = await api.post(`/admin/tickets/${ticketId}/assign/${staffId}`, payload);
     return response.data;
   },
   verifyPayment: async (ticketId: string) => {

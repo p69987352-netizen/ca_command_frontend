@@ -14,7 +14,7 @@ interface AppState {
   
   // Actions that mutate state and refresh
   approveTicket: (ticketId: string, feeAmount: number, adminNotes: string) => Promise<void>;
-  assignTicket: (ticketId: string, staffId: string, priority: string, notes: string) => Promise<void>;
+  assignTicket: (ticketId: string, staffId: string, payload: any) => Promise<void>;
   deliverTicket: (ticketId: string, closingMessage: string) => Promise<void>;
   getStaffDocumentUrl: (ticketId: string) => Promise<string>;
   requestChanges: (ticketId: string, changeRequest: string) => Promise<void>;
@@ -54,8 +54,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     await get().fetchData();
   },
 
-  assignTicket: async (ticketId, staffId, priority, notes) => {
-    await apiClient.assignTicket(ticketId, staffId, priority, notes);
+  assignTicket: async (ticketId, staffId, payload) => {
+    await apiClient.assignTicket(ticketId, staffId, payload);
     await get().fetchData();
   },
 
