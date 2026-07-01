@@ -16,6 +16,7 @@ export const ClientDetails: React.FC = () => {
   const [isEditingPricing, setIsEditingPricing] = useState(false);
   const [overrideFee, setOverrideFee] = useState("");
   const [summary, setSummary] = useState<any>(null);
+  const [pricingAnalysis, setPricingAnalysis] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [requestedDoc, setRequestedDoc] = useState("Bank Statement");
   const [customDoc, setCustomDoc] = useState("");
@@ -50,7 +51,15 @@ export const ClientDetails: React.FC = () => {
             setAssignmentNotes(`Call krna hai ${data.serviceType} ke liye`);
         }
         
-        setLoading(false);
+        if (data.latestTicketId) {
+            apiClient.fetchPricingAnalysis(data.latestTicketId).then(pData => {
+                setPricingAnalysis(pData);
+                setLoading(false);
+            }).catch(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+        
       }).catch(e => {
         console.error("Failed to fetch client summary", e);
         setLoading(false);
@@ -386,10 +395,38 @@ export const ClientDetails: React.FC = () => {
                         <h4 className="text-sm text-saas-muted uppercase tracking-wider mb-4">Fee Breakdown</h4>
                         
                         <div className="space-y-4 mb-8">
-                          <div className="flex justify-between items-center text-saas-text">
-                            <span>Base Fee ({itrForm})</span>
-                            <span className="font-medium text-white">{formatInr(feeQuoted)}</span>
-                          </div>
+                          {pricingAnalysis ? (
+                              <>
+                                {pricingAnalysis.competitorBenchmark > 0 && (
+                                    <div className="flex justify-between items-center text-saas-muted text-sm line-through">
+                                      <span>Competitor Price</span>
+                                      <span>{formatInr(pricingAnalysis.competitorBenchmark)}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between items-center text-saas-text">
+                                  <span>Professional Fee ({itrForm})</span>
+                                  <span className="font-medium text-white">{formatInr(pricingAnalysis.baseFee)}</span>
+                                </div>
+                                {pricingAnalysis.complexityAdjustments?.map((adj: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center text-saas-text text-sm pl-4 border-l-2 border-saas-primary/30">
+                                      <span>{adj.reason}</span>
+                                      <span className="text-saas-primary">+{formatInr(adj.amount)}</span>
+                                    </div>
+                                ))}
+                                {pricingAnalysis.standardDiscount > 0 && (
+                                    <div className="flex justify-between items-center text-green-400 text-sm pl-4 border-l-2 border-green-500/30">
+                                      <span>Platform Discount</span>
+                                      <span>-{formatInr(pricingAnalysis.standardDiscount)}</span>
+                                    </div>
+                                )}
+                                <div className="border-t border-white/10 my-2 pt-2"></div>
+                              </>
+                          ) : (
+                              <div className="flex justify-between items-center text-saas-text">
+                                <span>Base Fee ({itrForm})</span>
+                                <span className="font-medium text-white">{formatInr(feeQuoted)}</span>
+                              </div>
+                          )}
                           
                           {isEditingPricing ? (
                              <div className="flex items-center space-x-3 bg-black/20 p-3 rounded-xl border border-saas-primary/20">

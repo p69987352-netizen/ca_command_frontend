@@ -26,6 +26,14 @@ export const apiClient = {
     const response = await api.get(`/clients/${clientId}/summary`);
     return response.data;
   },
+  fetchPricingAnalysis: async (ticketId: string) => {
+    try {
+        const response = await api.get(`/pricing/ticket/${ticketId}`);
+        return response.data;
+    } catch (e) {
+        return null;
+    }
+  },
   approveTicket: async (ticketId: string, feeAmount: number, adminNotes: string) => {
     const response = await api.post(`/admin/tickets/${ticketId}/approve`, { feeAmount, adminNotes });
     return response.data;
