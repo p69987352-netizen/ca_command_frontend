@@ -23,7 +23,12 @@ const navItems = [
   { name: 'Settings', icon: Settings, path: '/dashboard/settings' }
 ];
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isMobileOpen?: boolean;
+  setIsMobileOpen?: (open: boolean) => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, setIsMobileOpen }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const location = useLocation();
 
@@ -32,7 +37,9 @@ export const Sidebar: React.FC = () => {
       initial={{ width: 280 }}
       animate={{ width: isExpanded ? 280 : 80 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="h-screen bg-saas-bgSecondary/30 backdrop-blur-3xl border-r border-white/10 flex flex-col relative z-20 shrink-0 shadow-2xl shadow-black"
+      className={`h-screen bg-saas-bgSecondary/95 md:bg-saas-bgSecondary/30 backdrop-blur-3xl border-r border-white/10 flex flex-col fixed md:relative inset-y-0 left-0 z-30 shrink-0 shadow-2xl shadow-black transition-transform duration-300 md:transform-none ${
+        isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}
     >
       <div className="flex items-center justify-between p-6">
         <AnimatePresence mode="wait">
@@ -67,6 +74,7 @@ export const Sidebar: React.FC = () => {
               href={item.path}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setIsMobileOpen?.(false)}
               className="flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-200 group text-gray-400 hover:text-saas-primary hover:bg-white/5 hover:shadow-lg"
             >
               <Icon 
@@ -90,6 +98,7 @@ export const Sidebar: React.FC = () => {
             <Link
               key={item.name}
               to={item.path}
+              onClick={() => setIsMobileOpen?.(false)}
               className={`flex items-center space-x-4 px-4 py-3 rounded-xl transition-all duration-200 group ${
                 isActive 
                   ? 'bg-saas-primary/10 border-l-2 border-saas-primary text-saas-primary shadow-[inset_0_0_20px_rgba(249,115,22,0.1)]' 

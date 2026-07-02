@@ -50,8 +50,8 @@ export const ClientRegistry: React.FC = () => {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between py-4 border-b border-white/10">
-          <div className="relative max-w-sm w-full">
+        <CardHeader className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 py-4 border-b border-white/10">
+          <div className="relative max-w-full sm:max-w-sm w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-saas-muted" />
             <input 
               type="text" 
@@ -61,7 +61,7 @@ export const ClientRegistry: React.FC = () => {
               className="w-full bg-saas-bgSecondary border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-saas-text focus:outline-none focus:border-saas-primary transition-colors"
             />
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Filter className="w-4 h-4 mr-2" />
             Filter
           </Button>
@@ -70,62 +70,64 @@ export const ClientRegistry: React.FC = () => {
           {isLoading ? (
             <div className="p-8 text-center text-saas-muted">Loading clients...</div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Client Details</TableHead>
-                  <TableHead>Service</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Financials</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredTickets.map(ticket => (
-                  <TableRow key={ticket.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/clients/${ticket.client?.id}`)}>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-saas-text">{ticket.client?.name || 'Unknown'}</span>
-                        <div className="flex items-center text-xs text-saas-muted mt-1 space-x-2">
-                          <span>{ticket.client?.phoneNumber}</span>
-                          {ticket.client?.city && (
-                            <>
-                              <span>•</span>
-                              <span className="flex items-center"><MapPin className="w-3 h-3 mr-1" /> {ticket.client.city}</span>
-                            </>
+            <div className="overflow-x-auto w-full">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Client Details</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Financials</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredTickets.map(ticket => (
+                    <TableRow key={ticket.id} className="cursor-pointer" onClick={() => navigate(`/dashboard/clients/${ticket.client?.id}`)}>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-saas-text">{ticket.client?.name || 'Unknown'}</span>
+                          <div className="flex items-center text-xs text-saas-muted mt-1 space-x-2">
+                            <span>{ticket.client?.phoneNumber}</span>
+                            {ticket.client?.city && (
+                              <>
+                                <span>•</span>
+                                <span className="flex items-center"><MapPin className="w-3 h-3 mr-1" /> {ticket.client.city}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="font-medium">{ticket.serviceType || 'ITR Filing'}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={['FINISHED', 'COMPLETED'].includes(ticket.status) ? 'success' : 'warning'}>
+                          {ticket.status.replace(/_/g, ' ')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-medium text-saas-text flex items-center">
+                            <IndianRupee className="w-3 h-3 mr-1 text-saas-muted" /> 
+                            {ticket.quotedFee || '-'}
+                          </span>
+                          {ticket.paymentStatus === 'PAID' && (
+                            <span className="text-xs text-saas-success font-medium">Paid</span>
+                          )}
+                          {ticket.paymentStatus !== 'PAID' && ticket.status === 'FEE_APPROVED' && (
+                            <span className="text-xs text-saas-warning font-medium">Link Sent</span>
                           )}
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="font-medium">{ticket.serviceType || 'ITR Filing'}</span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={['FINISHED', 'COMPLETED'].includes(ticket.status) ? 'success' : 'warning'}>
-                        {ticket.status.replace(/_/g, ' ')}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-saas-text flex items-center">
-                          <IndianRupee className="w-3 h-3 mr-1 text-saas-muted" /> 
-                          {ticket.quotedFee || '-'}
-                        </span>
-                        {ticket.paymentStatus === 'PAID' && (
-                          <span className="text-xs text-saas-success font-medium">Paid</span>
-                        )}
-                        {ticket.paymentStatus !== 'PAID' && ticket.status === 'FEE_APPROVED' && (
-                          <span className="text-xs text-saas-warning font-medium">Link Sent</span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                      <TicketActions ticket={ticket} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </TableCell>
+                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                        <TicketActions ticket={ticket} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
