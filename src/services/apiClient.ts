@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Ticket, Staff } from '../types';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://staff-parasail-obtuse.ngrok-free.dev/api',
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': 'true',
