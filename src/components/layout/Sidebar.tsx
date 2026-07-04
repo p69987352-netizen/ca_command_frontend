@@ -10,17 +10,17 @@ import {
   Files, 
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  CalendarClock
 } from 'lucide-react';
 
 const navItems = [
   { name: 'Command Center', icon: LayoutDashboard, path: '/dashboard' },
   { name: 'Client Registry', icon: Users, path: '/dashboard/clients' },
   { name: 'Manage Staff', icon: Users, path: '/dashboard/staff' },
+  { name: 'Attendance', icon: CalendarClock, path: '/dashboard/attendance' },
   { name: 'QC Review', icon: Scale, path: '/dashboard/qc' },
-  { name: 'Messages', icon: BellRing, path: '/dashboard/messages' },
-  { name: 'Documents', icon: Files, path: '/dashboard/documents' },
-  { name: 'Settings', icon: Settings, path: '/dashboard/settings' }
+  { name: 'Messages', icon: BellRing, path: '/dashboard/messages' }
 ];
 
 interface SidebarProps {

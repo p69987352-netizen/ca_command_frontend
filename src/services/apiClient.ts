@@ -113,4 +113,41 @@ export const apiClient = {
     const response = await api.delete(`/admin/staff/${staffId}`);
     return response.data;
   },
+  // Staff & Attendance
+  getStaff: async (): Promise<Staff[]> => {
+    const response = await api.get('/admin/staff');
+    return response.data;
+  },
+  getStaffAttendance: async (staffId: string) => {
+    const response = await api.get(`/admin/staff/${staffId}/attendance`);
+    return response.data;
+  },
+  fetchTodayAttendance: async () => {
+    const response = await api.get('/admin/staff/attendance/today');
+    return response.data;
+  },
+  fetchAttendanceByDate: async (date: string) => {
+    const response = await api.get(`/admin/staff/attendance/date/${date}`);
+    return response.data;
+  },
+  fetchAttendanceByMonth: async (year: number, month: number) => {
+    const response = await api.get(`/admin/staff/attendance/month/${year}/${month}`);
+    return response.data;
+  },
+  sendAttendanceReminders: async () => {
+    const response = await api.post('/admin/staff/remind-attendance');
+    return response.data;
+  },
+  getStaffTickets: async (staffId: string): Promise<Ticket[]> => {
+    const response = await api.get(`/admin/staff/${staffId}/tickets`);
+    return response.data;
+  },
+  reassignTicket: async (ticketId: string, staffId: string, notes?: string) => {
+    const response = await api.post(`/admin/tickets/${ticketId}/reassign/${staffId}`, notes);
+    return response.data;
+  },
+  getStaffPerformance: async (staffId: string) => {
+    const response = await api.get(`/admin/staff/${staffId}/performance`);
+    return response.data;
+  }
 };

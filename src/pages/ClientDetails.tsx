@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, IndianRupee, Sparkles, CheckCircle2, ShieldCheck, FileSearch, Edit2, Info, User } from 'lucide-react';
+import { ArrowLeft, FileText, IndianRupee, Sparkles, CheckCircle2, ShieldCheck, FileSearch, Edit2, Info, User, Repeat } from 'lucide-react';
 import { apiClient } from '../services/apiClient';
 import { Card, CardContent } from '../components/ui/Card';
 import { Tabs } from '../components/ui/Tabs';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
+import { ReassignTaskModal } from '../components/ReassignTaskModal';
 
 export const ClientDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +31,7 @@ export const ClientDetails: React.FC = () => {
   const [assignmentCategory, setAssignmentCategory] = useState("Standard");
   const [assignmentUrgency, setAssignmentUrgency] = useState("Normal");
   const [assignmentRemarks, setAssignmentRemarks] = useState("");
+  const [isReassignModalOpen, setIsReassignModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -673,7 +675,16 @@ export const ClientDetails: React.FC = () => {
                                   {ticket.status}
                                 </Badge>
                               </TableCell>
-                              <TableCell className="text-saas-text">{ticket.assignedStaffName || 'Unassigned'}</TableCell>
+                              <TableCell className="text-saas-text">
+                                <div className="flex items-center space-x-2">
+                                  <span>{ticket.assignedStaffName || 'Unassigned'}</span>
+                                  {ticket.assignedStaffName && (
+                                    <button onClick={() => setIsReassignModalOpen(true)} className="text-saas-primary hover:text-saas-primary/80" title="Reassign Task">
+                                      <Repeat className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
+                              </TableCell>
                               <TableCell className="text-right text-white font-bold">{ticket.fee ? formatInr(ticket.fee) : '-'}</TableCell>
                             </TableRow>
                           ))
@@ -694,6 +705,17 @@ export const ClientDetails: React.FC = () => {
           </Card>
         </div>
       </div>
+      
+      {isReassignModalOpen && summary?.latestTicketId && (
+        <ReassignTaskModal
+          ticketId={summary.latestTicketId}
+          onClose={() => setIsReassignModalOpen(false)}
+          onSuccess={() => {
+            alert("Task Reassigned Successfully!");
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };

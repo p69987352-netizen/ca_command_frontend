@@ -5,8 +5,10 @@ import { LandingPage } from './pages/LandingPage'
 import { ClientRegistry } from './pages/ClientRegistry'
 import { ClientDetails } from './pages/ClientDetails'
 import { StaffManagement } from './pages/StaffManagement'
+import { StaffDetails } from './pages/StaffDetails'
 import { QCReview } from './pages/QCReview'
 import { Communication } from './pages/Communication'
+import { Attendance } from './pages/Attendance'
 
 function App() {
   return (
@@ -18,8 +20,10 @@ function App() {
           <Route path="clients" element={<ClientRegistry />} />
           <Route path="clients/:id" element={<ClientDetails />} />
           <Route path="staff" element={<StaffManagement />} />
+          <Route path="staff/:id" element={<StaffDetails />} />
           <Route path="qc" element={<QCReview />} />
           <Route path="messages" element={<Communication />} />
+          <Route path="attendance" element={<Attendance />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
