@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../services/apiClient';
 import { Staff } from '../types';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Calendar as CalendarIcon, CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 interface AttendanceRecord {
