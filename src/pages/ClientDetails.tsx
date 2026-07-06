@@ -406,7 +406,7 @@ export const ClientDetails: React.FC = () => {
                                     </div>
                                 )}
                                 <div className="flex justify-between items-center text-saas-text">
-                                  <span>Professional Fee ({itrForm})</span>
+                                  <span>Professional Fee ({isItr ? itrForm : summary.serviceType})</span>
                                   <span className="font-medium text-white">{formatInr(pricingAnalysis.baseFee)}</span>
                                 </div>
                                 {pricingAnalysis.complexityAdjustments?.map((adj: any, idx: number) => (
@@ -425,7 +425,7 @@ export const ClientDetails: React.FC = () => {
                               </>
                           ) : (
                               <div className="flex justify-between items-center text-saas-text">
-                                <span>Base Fee ({itrForm})</span>
+                                <span>Base Fee ({isItr ? itrForm : summary.serviceType})</span>
                                 <span className="font-medium text-white">{formatInr(feeQuoted)}</span>
                               </div>
                           )}
