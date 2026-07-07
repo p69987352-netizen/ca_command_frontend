@@ -27,6 +27,14 @@ export const apiClient = {
     const response = await api.get(`/clients/${clientId}/summary`);
     return response.data;
   },
+  createClientWithDocuments: async (formData: FormData) => {
+    const response = await api.post('/admin/clients/create-with-documents', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
   fetchPricingAnalysis: async (ticketId: string) => {
     try {
         const response = await api.get(`/pricing/ticket/${ticketId}`);

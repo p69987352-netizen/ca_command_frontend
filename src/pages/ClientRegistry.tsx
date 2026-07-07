@@ -1,22 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, MoreHorizontal, Download, Plus, MapPin, IndianRupee } from 'lucide-react';
+import { Search, Filter, MoreHorizontal, Download, Plus, MapPin, IndianRupee, Trash2, PlusCircle } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { TicketActions } from '../components/TicketActions';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../components/ui/Table';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
+import { Modal } from '../components/ui/Modal';
+import { apiClient } from '../services/apiClient';
 
 export const ClientRegistry: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const { tickets, fetchData, isLoading } = useAppStore();
 
+  // Form states for manual client creation
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [city, setCity] = useState('');
+  const [pan, setPan] = useState('');
+  const [dob, setDob] = useState('');
+  const [itPassword, setItPassword] = useState('');
+  const [serviceType, setServiceType] = useState('ITR Filing');
+  const [documents, setDocuments] = useState<{ id: string; docName: string; customName: string; file: File | null }[]>([
+    { id: '1', docName: 'PAN Card', customName: '', file: null }
+  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const handleAddDocumentRow = () => {
+    setDocuments([...documents, { id: Date.now().toString(), docName: '', customName: '', file: null }]);
+  };
+
+  const handleRemoveDocumentRow = (id: string) => {
+    setDocuments(documents.filter(doc => doc.id !== id));
+  };
+
+  const handleDocFieldChange = (id: string, field: 'docName' | 'customName' | 'file', value: any) => {
+    setDocuments(documents.map(doc => {
+      if (doc.id === id) {
+        return { ...doc, [field]: value };
+      }
+      return doc;
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phoneNumber || !city || !pan || !dob || !itPassword || !serviceType) {
+      setErrorMsg('Please fill in all client details.');
+      return;
+    }
+    setErrorMsg('');
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('phoneNumber', phoneNumber);
+      formData.append('city', city);
+      formData.append('pan', pan);
+      formData.append('dob', dob);
+      formData.append('itPassword', itPassword);
+      formData.append('serviceType', serviceType);
+
+      documents.forEach(doc => {
+        if (doc.file) {
+          const finalName = doc.docName === 'Other' ? doc.customName : doc.docName;
+          formData.append('docNames', finalName || 'Document');
+          formData.append('files', doc.file);
+        }
+      });
+
+      await apiClient.createClientWithDocuments(formData);
+      setIsModalOpen(false);
+      
+      // Reset form
+      setName('');
+      setPhoneNumber('');
+      setCity('');
+      setPan('');
+      setDob('');
+      setItPassword('');
+      setServiceType('ITR Filing');
+      setDocuments([{ id: '1', docName: 'PAN Card', customName: '', file: null }]);
+      
+      // Refresh list
+      fetchData();
+    } catch (e: any) {
+      console.error(e);
+      setErrorMsg(e.response?.data?.message || 'Failed to create client and upload documents.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const filteredTickets = tickets.filter(ticket => {
     const clientName = ticket.client?.name || '';
@@ -42,7 +126,7 @@ export const ClientRegistry: React.FC = () => {
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button>
+          <Button onClick={() => setIsModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             New Client
           </Button>
@@ -131,6 +215,191 @@ export const ClientRegistry: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Add New Client & Upload Documents"
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6 text-saas-text">
+          {errorMsg && (
+            <div className="bg-red-500/20 border border-red-500/30 text-red-400 p-3.5 rounded-xl text-sm font-semibold">
+              {errorMsg}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">Full Name</label>
+              <input
+                type="text"
+                placeholder="Enter client name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">WhatsApp Phone Number (with country code)</label>
+              <input
+                type="text"
+                placeholder="e.g. 919876543210"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">City</label>
+              <input
+                type="text"
+                placeholder="Enter city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">PAN Number</label>
+              <input
+                type="text"
+                placeholder="ABCDE1234F"
+                value={pan}
+                onChange={(e) => setPan(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm uppercase"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">Date of Birth</label>
+              <input
+                type="text"
+                placeholder="DD/MM/YYYY"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">IT Portal Password</label>
+              <input
+                type="text"
+                placeholder="Enter portal password"
+                value={itPassword}
+                onChange={(e) => setItPassword(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                required
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">Service Type</label>
+              <select
+                value={serviceType}
+                onChange={(e) => setServiceType(e.target.value)}
+                className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+              >
+                <option value="ITR Filing" className="bg-saas-bgSecondary">ITR Filing</option>
+                <option value="GST Services" className="bg-saas-bgSecondary">GST Services</option>
+                <option value="Tax Notice / Appeal" className="bg-saas-bgSecondary">Tax Notice / Appeal</option>
+                <option value="Tax Advisory" className="bg-saas-bgSecondary">Tax Advisory</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-4">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider">Client Documents</h4>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAddDocumentRow}
+                className="border-saas-primary/30 text-saas-primary hover:bg-saas-primary/15"
+              >
+                <PlusCircle className="w-4 h-4 mr-1.5" />
+                Add Document
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {documents.map((doc, idx) => (
+                <div key={doc.id} className="flex flex-col md:flex-row items-stretch md:items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                  <div className="flex-1">
+                    <select
+                      value={doc.docName}
+                      onChange={(e) => handleDocFieldChange(doc.id, 'docName', e.target.value)}
+                      className="w-full bg-black/30 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-saas-primary text-sm"
+                    >
+                      <option value="" disabled>Select Document Type...</option>
+                      <option value="PAN Card">PAN Card</option>
+                      <option value="Aadhaar Card">Aadhaar Card</option>
+                      <option value="AIS/TIS Report">AIS/TIS Report</option>
+                      <option value="TDS Certificate">TDS Certificate</option>
+                      <option value="Bank Statement">Bank Statement</option>
+                      <option value="Form 16">Form 16</option>
+                      <option value="Other">Other (Custom Name)</option>
+                    </select>
+                  </div>
+
+                  {doc.docName === 'Other' && (
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        placeholder="Type Document Name"
+                        value={doc.customName}
+                        onChange={(e) => handleDocFieldChange(doc.id, 'customName', e.target.value)}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg p-2.5 text-white focus:outline-none focus:border-saas-primary text-sm"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex-1 flex items-center space-x-2">
+                    <input
+                      type="file"
+                      onChange={(e) => handleDocFieldChange(doc.id, 'file', e.target.files?.[0] || null)}
+                      className="text-xs text-saas-muted file:bg-white/10 file:border-none file:text-white file:px-3 file:py-2 file:rounded-lg file:mr-3 file:cursor-pointer hover:file:bg-white/15"
+                      required
+                    />
+                    {documents.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveDocumentRow(doc.id)}
+                        className="text-red-400 hover:text-red-300 p-2 hover:bg-white/5 rounded-lg transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-3 border-t border-white/10 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-saas-primary hover:bg-saas-primary/95 text-white font-bold"
+            >
+              {isSubmitting ? 'Creating...' : 'Create Client & Ticket'}
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

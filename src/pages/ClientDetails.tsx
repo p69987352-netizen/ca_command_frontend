@@ -214,6 +214,16 @@ export const ClientDetails: React.FC = () => {
               <span>•</span>
               <span>Last Updated: Just now</span>
             </div>
+            
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-saas-muted font-medium mt-3 bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 max-w-max">
+              <div><strong className="text-saas-primary uppercase">PAN:</strong> <span className="text-white font-mono bg-black/30 px-2 py-0.5 rounded border border-white/5">{summary.clientProfile.pan || 'N/A'}</span></div>
+              <span className="text-white/20">|</span>
+              <div><strong className="text-saas-primary uppercase">DOB:</strong> <span className="text-white font-mono bg-black/30 px-2 py-0.5 rounded border border-white/5">{summary.clientProfile.dob || 'N/A'}</span></div>
+              <span className="text-white/20">|</span>
+              <div><strong className="text-saas-primary uppercase">Portal PW:</strong> <span className="text-white font-mono bg-black/30 px-2 py-0.5 rounded border border-white/5">{summary.clientProfile.itPassword || 'N/A'}</span></div>
+              <span className="text-white/20">|</span>
+              <div><strong className="text-saas-primary uppercase">Phone:</strong> <span className="text-white font-mono bg-black/30 px-2 py-0.5 rounded border border-white/5">{summary.clientProfile.phoneNumber}</span></div>
+            </div>
           </div>
         </div>
       </div>
