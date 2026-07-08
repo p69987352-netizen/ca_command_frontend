@@ -146,6 +146,10 @@ export const apiClient = {
     const response = await api.post('/admin/staff/remind-attendance');
     return response.data;
   },
+  generateAttendanceReport: async () => {
+    const response = await api.post('/admin/staff/generate-report');
+    return response.data;
+  },
   getStaffTickets: async (staffId: string): Promise<Ticket[]> => {
     const response = await api.get(`/admin/staff/${staffId}/tickets`);
     return response.data;

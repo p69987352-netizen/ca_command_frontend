@@ -237,6 +237,21 @@ export const Attendance: React.FC = () => {
           </h1>
           <p className="text-saas-muted mt-2">Monitor daily and monthly staff attendance records.</p>
         </div>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={async () => {
+              try {
+                await apiClient.generateAttendanceReport();
+                alert("Attendance report generated & sent to Super Admin WhatsApp successfully!");
+              } catch (e) {
+                alert("Failed to generate report.");
+              }
+            }}
+            className="bg-saas-primary text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-saas-primary/80 transition-all flex items-center shadow-lg"
+          >
+            📊 Generate Report
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
