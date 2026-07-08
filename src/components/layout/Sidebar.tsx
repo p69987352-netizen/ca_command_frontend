@@ -140,7 +140,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, setIsMobileOpen 
                 className="overflow-hidden"
               >
                 <p className="text-sm font-medium text-white truncate">Admin User</p>
-                <p className="text-xs text-saas-primary truncate">admin@porwalca.com</p>
+                <p className="text-xs text-saas-primary truncate">info@feuvolts.com</p>
               </motion.div>
             )}
           </AnimatePresence>
