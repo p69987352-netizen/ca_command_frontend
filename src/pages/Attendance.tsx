@@ -133,14 +133,22 @@ export const Attendance: React.FC = () => {
                       {record?.createdAt ? (
                         <div className="flex flex-col">
                           <span>
-                            {new Date(record.createdAt).toLocaleTimeString('en-US', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              hour12: true
-                            })}
+                            {(() => {
+                              const normalized = (record.createdAt.endsWith('Z') || record.createdAt.includes('+') || record.createdAt.includes('-')) 
+                                ? record.createdAt 
+                                : record.createdAt + 'Z';
+                              return new Date(normalized).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              });
+                            })()}
                           </span>
                           {(() => {
-                            const date = new Date(record.createdAt);
+                            const normalized = (record.createdAt.endsWith('Z') || record.createdAt.includes('+') || record.createdAt.includes('-')) 
+                              ? record.createdAt 
+                              : record.createdAt + 'Z';
+                            const date = new Date(normalized);
                             const hours = date.getHours();
                             const minutes = date.getMinutes();
                             if (hours > 10 || (hours === 10 && minutes > 30)) {
@@ -240,11 +248,13 @@ export const Attendance: React.FC = () => {
         <div className="flex items-center space-x-3">
           <button
             onClick={async () => {
-              try {
-                await apiClient.generateAttendanceReport();
-                alert("Attendance report generated & sent to Super Admin WhatsApp successfully!");
-              } catch (e) {
-                alert("Failed to generate report.");
+              if (window.confirm("Do you want to send the daily attendance report to the Super Admins?")) {
+                try {
+                  await apiClient.generateAttendanceReport();
+                  alert("Attendance report generated & sent to Super Admin WhatsApp successfully!");
+                } catch (e) {
+                  alert("Failed to generate report.");
+                }
               }
             }}
             className="bg-saas-primary text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-saas-primary/80 transition-all flex items-center shadow-lg"
