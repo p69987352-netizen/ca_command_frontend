@@ -9,7 +9,7 @@ interface AttendanceRecord {
   staff: Staff;
   attendanceDate: string;
   status: string;
-  checkInTime: string;
+  createdAt: string;
   photoUrl: string;
   locationLink: string;
 }
@@ -130,7 +130,30 @@ export const Attendance: React.FC = () => {
                       )}
                     </td>
                     <td className="p-4 text-sm text-gray-300">
-                      {record?.checkInTime ? new Date(record.checkInTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '-'}
+                      {record?.createdAt ? (
+                        <div className="flex flex-col">
+                          <span>
+                            {new Date(record.createdAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true
+                            })}
+                          </span>
+                          {(() => {
+                            const date = new Date(record.createdAt);
+                            const hours = date.getHours();
+                            const minutes = date.getMinutes();
+                            if (hours > 10 || (hours === 10 && minutes > 30)) {
+                              return (
+                                <span className="text-[10px] text-red-400 font-bold mt-0.5">
+                                  ⚠️ LATE
+                                </span>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
+                      ) : '-'}
                     </td>
                     <td className="p-4 text-sm">
                       {record?.locationLink ? (
