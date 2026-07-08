@@ -10,6 +10,7 @@ interface AttendanceRecord {
   attendanceDate: string;
   status: string;
   createdAt: string;
+  createdAtIso?: string;
   photoUrl: string;
   locationLink: string;
 }
@@ -134,9 +135,10 @@ export const Attendance: React.FC = () => {
                         <div className="flex flex-col">
                           <span>
                             {(() => {
-                              const normalized = (record.createdAt.endsWith('Z') || record.createdAt.includes('+') || record.createdAt.includes('-')) 
-                                ? record.createdAt 
-                                : record.createdAt + 'Z';
+                              const targetTime = record.createdAtIso || record.createdAt;
+                              const normalized = (targetTime.endsWith('Z') || targetTime.includes('+') || targetTime.includes('-')) 
+                                ? targetTime 
+                                : targetTime + 'Z';
                               return new Date(normalized).toLocaleTimeString('en-US', {
                                 hour: '2-digit',
                                 minute: '2-digit',
@@ -145,9 +147,10 @@ export const Attendance: React.FC = () => {
                             })()}
                           </span>
                           {(() => {
-                            const normalized = (record.createdAt.endsWith('Z') || record.createdAt.includes('+') || record.createdAt.includes('-')) 
-                              ? record.createdAt 
-                              : record.createdAt + 'Z';
+                            const targetTime = record.createdAtIso || record.createdAt;
+                            const normalized = (targetTime.endsWith('Z') || targetTime.includes('+') || targetTime.includes('-')) 
+                              ? targetTime 
+                              : targetTime + 'Z';
                             const date = new Date(normalized);
                             const hours = date.getHours();
                             const minutes = date.getMinutes();
