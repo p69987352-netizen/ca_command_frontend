@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  FolderArchive, UploadCloud, Eye, Download, 
-  FileText, CheckCircle2, ShieldCheck
+  FolderArchive, Eye, Download, 
+  FileText, ShieldCheck
 } from 'lucide-react';
 
 interface DocumentItem {
@@ -57,21 +57,21 @@ export const ClientDocumentVault: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12 text-[#F8FAFC]">
+    <div className="space-y-8 animate-fade-in pb-12 text-slate-800">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
-          <FolderArchive className="mr-2 text-[#F5B942]" /> Document Vault
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center">
+          <FolderArchive className="mr-2 text-[#B45309]" /> Document Vault
         </h1>
-        <p className="text-sm text-gray-400 mt-1">Upload and manage secure tax documents mapped to your WhatsApp feed.</p>
+        <p className="text-sm text-slate-500 mt-1">Upload and manage secure tax documents mapped to your WhatsApp feed.</p>
       </div>
 
-      <div className="flex space-x-2 bg-white/[0.02] border border-white/[0.08] p-1 rounded-xl w-fit">
+      <div className="flex space-x-2 bg-slate-100 border border-slate-200 p-1 rounded-xl w-fit">
         {['FY 2024-25', 'FY 2025-26', 'FY 2026-27'].map((fy) => (
           <button
             key={fy}
             onClick={() => setSelectedFY(fy)}
             className={`px-4 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              selectedFY === fy ? 'bg-[#F5B942] text-black shadow-lg font-bold' : 'text-gray-400 hover:text-white'
+              selectedFY === fy ? 'bg-[#F5B942] text-black shadow-md font-bold' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             {fy}
@@ -83,27 +83,27 @@ export const ClientDocumentVault: React.FC = () => {
         
         {/* Upload Slots List */}
         <div className="lg:col-span-8 space-y-4">
-          <h2 className="text-base font-semibold text-white tracking-wide">Required File Upload Slots</h2>
+          <h2 className="text-base font-semibold text-slate-900 tracking-wide">Required File Upload Slots</h2>
           {documents.map((doc) => (
             <motion.div
               layout
               key={doc.key}
-              className="bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12] p-5 rounded-2xl transition-all shadow-md flex items-center justify-between"
+              className="bg-white border border-slate-200/80 p-5 rounded-2xl hover:border-slate-300 transition-all shadow-sm flex items-center justify-between"
             >
               <div className="flex items-center space-x-4">
                 <div className={`p-2.5 rounded-xl border ${
                   doc.status === 'uploaded' 
-                    ? 'bg-[#34D399]/5 border-[#34D399]/20 text-[#34D399]' 
-                    : 'bg-[#EF4444]/5 border-[#EF4444]/20 text-[#EF4444]'
+                    ? 'bg-[#34D399]/10 border-[#34D399]/20 text-[#166534]' 
+                    : 'bg-[#EF4444]/10 border-[#EF4444]/20 text-[#EF4444]'
                 }`}>
                   <FileText size={20} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white tracking-wide">
+                  <h3 className="text-sm font-semibold text-slate-900 tracking-wide">
                     {doc.name} 
-                    {doc.limit && <span className="text-[10px] text-[#F5B942] ml-2 font-mono">({doc.limit})</span>}
+                    {doc.limit && <span className="text-[10px] text-[#B45309] ml-2 font-mono">({doc.limit})</span>}
                   </h3>
-                  <span className="text-[10px] text-gray-500 font-mono mt-0.5 block">
+                  <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">
                     {doc.status === 'uploaded' ? `Uploaded ${doc.date} • ${doc.type}` : 'Required Document • Missing'}
                   </span>
                 </div>
@@ -111,13 +111,13 @@ export const ClientDocumentVault: React.FC = () => {
 
               <div className="flex items-center space-x-2">
                 {uploadProgress[doc.key] !== undefined ? (
-                  <span className="text-xs text-[#F5B942] font-mono font-bold animate-pulse">Uploading {uploadProgress[doc.key]}%</span>
+                  <span className="text-xs text-[#B45309] font-mono font-bold animate-pulse">Uploading {uploadProgress[doc.key]}%</span>
                 ) : doc.status === 'uploaded' ? (
                   <>
-                    <button className="p-2 bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] rounded-xl text-gray-400 hover:text-white transition-all text-xs flex items-center">
+                    <button className="p-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-slate-800 transition-all text-xs flex items-center">
                       <Eye size={14} className="mr-1.5" /> Preview
                     </button>
-                    <button className="p-2 bg-[#34D399]/10 border border-[#34D399]/20 hover:bg-[#34D399]/20 rounded-xl text-[#34D399] transition-all">
+                    <button className="p-2 bg-[#34D399]/10 border border-[#34D399]/20 hover:bg-[#34D399]/20 rounded-xl text-[#166534] transition-all">
                       <Download size={14} />
                     </button>
                   </>
@@ -136,9 +136,9 @@ export const ClientDocumentVault: React.FC = () => {
 
         {/* Info Zone */}
         <div className="lg:col-span-4">
-          <div className="bg-white/[0.02] border border-white/[0.08] p-6 rounded-2xl shadow-lg space-y-4">
-            <h3 className="text-sm font-semibold text-white tracking-wide">Document Sync Details</h3>
-            <div className="flex items-start space-x-3 text-xs text-gray-400">
+          <div className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-wide">Document Sync Details</h3>
+            <div className="flex items-start space-x-3 text-xs text-slate-500">
               <ShieldCheck size={16} className="text-[#34D399] shrink-0 mt-0.5" />
               <p className="leading-relaxed">
                 All files uploaded here automatically sync with your WhatsApp ARJUN chatbot thread and notify our CA desk.

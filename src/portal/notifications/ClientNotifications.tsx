@@ -48,20 +48,20 @@ export const ClientNotifications: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12 text-[#F8FAFC]">
+    <div className="space-y-8 animate-fade-in pb-12 text-slate-800">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
-          <Bell className="mr-2 text-[#F5B942]" /> Notifications
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center">
+          <Bell className="mr-2 text-[#B45309]" /> Notifications
         </h1>
-        <p className="text-sm text-gray-400 mt-1">Stay updated with instant actions requested by your CA or Arjun AI.</p>
+        <p className="text-sm text-slate-500 mt-1">Stay updated with instant actions requested by your CA or Arjun AI.</p>
       </div>
 
-      <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl overflow-hidden shadow-xl divide-y divide-white/[0.04]">
+      <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm divide-y divide-slate-100">
         {notifications.map((item) => (
           <div 
             key={item.id} 
-            className={`p-6 flex items-start space-x-4 transition-all hover:bg-white/[0.01] ${
-              item.unread ? 'bg-white/[0.01]' : ''
+            className={`p-6 flex items-start space-x-4 transition-all hover:bg-slate-50/50 ${
+              item.unread ? 'bg-slate-50/30' : ''
             }`}
           >
             <div className="pt-1 shrink-0">
@@ -72,12 +72,12 @@ export const ClientNotifications: React.FC = () => {
 
             <div className="flex-1 space-y-1">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                <h3 className={`text-sm tracking-wide ${item.unread ? 'font-bold text-white' : 'text-gray-300'}`}>
+                <h3 className={`text-sm tracking-wide ${item.unread ? 'font-bold text-slate-950' : 'text-slate-700 font-semibold'}`}>
                   {item.title}
                 </h3>
-                <span className="text-[10px] text-gray-500 font-mono shrink-0">{item.time}</span>
+                <span className="text-[10px] text-slate-400 font-mono shrink-0">{item.time}</span>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed max-w-3xl">
+              <p className="text-xs text-slate-500 leading-relaxed max-w-3xl font-medium">
                 {item.desc}
               </p>
             </div>

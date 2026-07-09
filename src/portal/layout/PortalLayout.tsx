@@ -51,9 +51,10 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#050816] text-[#F8FAFC] font-sans flex flex-col md:flex-row overflow-x-hidden pb-16 md:pb-0">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col md:flex-row overflow-x-hidden pb-16 md:pb-0">
       
-      <aside className="hidden md:flex flex-col w-64 bg-white/[0.02] border-r border-white/[0.08] backdrop-blur-md p-6 justify-between shrink-0">
+      {/* Sidebar - Desktop (Retaining premium dark contrast for executive feel) */}
+      <aside className="hidden md:flex flex-col w-64 bg-[#0B0F19] border-r border-slate-800 p-6 justify-between shrink-0 text-[#F8FAFC]">
         <div className="space-y-8">
           <div className="flex items-center space-x-3 py-2">
             <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 p-2 rounded-lg text-[#F5B942]">
@@ -108,28 +109,30 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         </div>
       </aside>
 
-      <header className="md:hidden flex items-center justify-between bg-white/[0.02] border-b border-white/[0.08] backdrop-blur-md px-6 py-4 relative z-20">
+      {/* Header - Mobile */}
+      <header className="md:hidden flex items-center justify-between bg-white border-b border-slate-200 px-6 py-4 relative z-20">
         <div className="flex items-center space-x-3">
-          <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 p-1.5 rounded-lg text-[#F5B942]">
+          <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 p-1.5 rounded-lg text-[#B45309]">
             <Sparkles size={16} />
           </div>
-          <span className="text-lg font-bold font-cinzel tracking-widest text-white">ARJUN</span>
+          <span className="text-lg font-bold font-cinzel tracking-widest text-slate-800">ARJUN</span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-gray-400 hover:text-white"
+          className="text-slate-500 hover:text-slate-800"
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </header>
 
+      {/* Mobile Menu Dropdown */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-[65px] left-0 w-full bg-[#050816]/95 border-b border-white/[0.08] backdrop-blur-lg z-30 p-6 space-y-6 shadow-2xl"
+            className="md:hidden absolute top-[65px] left-0 w-full bg-white border-b border-slate-200 z-30 p-6 space-y-6 shadow-xl"
           >
             <nav className="space-y-2">
               {navigation.map((item) => {
@@ -139,7 +142,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
                     key={item.name}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 p-3 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white"
+                    className="flex items-center space-x-3 p-3 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-slate-900 font-medium"
                   >
                     <Icon size={18} />
                     <span>{item.name}</span>
@@ -147,13 +150,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
                 );
               })}
             </nav>
-            <div className="h-px bg-white/[0.08]" />
+            <div className="h-px bg-slate-100" />
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full" />
                 <div>
-                  <h4 className="text-sm font-semibold text-white">{user.name}</h4>
-                  <p className="text-xs text-gray-500">{user.email}</p>
+                  <h4 className="text-sm font-semibold text-slate-800">{user.name}</h4>
+                  <p className="text-xs text-slate-500">{user.email}</p>
                 </div>
               </div>
               <button
@@ -167,24 +170,27 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         )}
       </AnimatePresence>
 
+      {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-h-0 relative">
-        <header className="hidden md:flex items-center justify-between border-b border-white/[0.08] px-8 py-4 backdrop-blur-md">
-          <div className="text-sm text-gray-400">
+        {/* Desktop Header */}
+        <header className="hidden md:flex items-center justify-between border-b border-slate-200 px-8 py-4 bg-white shadow-sm">
+          <div className="text-sm text-slate-500 font-medium">
             Arjun CA Command Client Portal
           </div>
           <div className="flex items-center space-x-6">
-            <Link to="/portal/notifications" className="relative p-2 bg-white/[0.02] border border-white/[0.08] hover:bg-white/[0.04] rounded-xl text-gray-400 hover:text-white transition-all">
+            <Link to="/portal/notifications" className="relative p-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-slate-800 transition-all">
               <Bell size={18} />
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-[#EF4444] border-2 border-[#050816] rounded-full" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-[#EF4444] rounded-full" />
             </Link>
             
-            <div className="flex items-center space-x-3 pl-4 border-l border-white/[0.08]">
-              <img src={user.avatar} alt="Google Avatar" className="w-8 h-8 rounded-full border border-white/20" />
-              <span className="text-sm font-medium text-white">{user.name.split(' ')[0]}</span>
+            <div className="flex items-center space-x-3 pl-4 border-l border-slate-200">
+              <img src={user.avatar} alt="Google Avatar" className="w-8 h-8 rounded-full border border-slate-200" />
+              <span className="text-sm font-semibold text-slate-800">{user.name.split(' ')[0]}</span>
             </div>
           </div>
         </header>
 
+        {/* Content Render Outlet */}
         <div className="flex-1 overflow-y-auto p-6 md:p-8">
           <AnimatePresence mode="wait">
             <motion.div
@@ -203,26 +209,27 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
 
       <FloatingArjun />
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050816]/90 backdrop-blur-lg border-t border-white/[0.08] flex justify-around py-3 z-30">
-        <Link to="/portal" className={`flex flex-col items-center space-y-1 ${isActive('/portal') && location.pathname === '/portal' ? 'text-[#F5B942]' : 'text-gray-500'}`}>
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 flex justify-around py-3 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+        <Link to="/portal" className={`flex flex-col items-center space-y-1 ${isActive('/portal') && location.pathname === '/portal' ? 'text-[#F5B942]' : 'text-slate-400'}`}>
           <LayoutDashboard size={20} />
-          <span className="text-[10px]">Home</span>
+          <span className="text-[10px] font-medium">Home</span>
         </Link>
-        <Link to="/portal/documents" className={`flex flex-col items-center space-y-1 ${isActive('/portal/documents') ? 'text-[#F5B942]' : 'text-gray-500'}`}>
+        <Link to="/portal/documents" className={`flex flex-col items-center space-y-1 ${isActive('/portal/documents') ? 'text-[#F5B942]' : 'text-slate-400'}`}>
           <FolderArchive size={20} />
-          <span className="text-[10px]">Vault</span>
+          <span className="text-[10px] font-medium">Vault</span>
         </Link>
-        <Link to="/portal/ai" className={`flex flex-col items-center space-y-1 ${isActive('/portal/ai') ? 'text-[#F5B942]' : 'text-gray-500'}`}>
+        <Link to="/portal/ai" className={`flex flex-col items-center space-y-1 ${isActive('/portal/ai') ? 'text-[#F5B942]' : 'text-slate-400'}`}>
           <Sparkles size={20} />
-          <span className="text-[10px]">Insights</span>
+          <span className="text-[10px] font-medium">Insights</span>
         </Link>
-        <Link to="/portal/payments" className={`flex flex-col items-center space-y-1 ${isActive('/portal/payments') ? 'text-[#F5B942]' : 'text-gray-500'}`}>
+        <Link to="/portal/payments" className={`flex flex-col items-center space-y-1 ${isActive('/portal/payments') ? 'text-[#F5B942]' : 'text-slate-400'}`}>
           <CreditCard size={20} />
-          <span className="text-[10px]">Pay</span>
+          <span className="text-[10px] font-medium">Pay</span>
         </Link>
-        <Link to="/portal/profile" className={`flex flex-col items-center space-y-1 ${isActive('/portal/profile') ? 'text-[#F5B942]' : 'text-gray-500'}`}>
+        <Link to="/portal/profile" className={`flex flex-col items-center space-y-1 ${isActive('/portal/profile') ? 'text-[#F5B942]' : 'text-slate-400'}`}>
           <User size={20} />
-          <span className="text-[10px]">Profile</span>
+          <span className="text-[10px] font-medium">Profile</span>
         </Link>
       </nav>
 

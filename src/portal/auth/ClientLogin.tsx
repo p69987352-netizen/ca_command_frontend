@@ -27,15 +27,15 @@ export const ClientLogin: React.FC = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#050816] text-[#F8FAFC] font-sans flex items-center justify-center overflow-hidden p-6">
+    <div className="relative min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex items-center justify-center overflow-hidden p-6">
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#F5B942]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#34D399]/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1.5 h-1.5 bg-white rounded-full"
+            className="absolute w-1.5 h-1.5 bg-slate-400 rounded-full"
             initial={{
               x: Math.random() * window.innerWidth,
               y: Math.random() * window.innerHeight,
@@ -67,14 +67,14 @@ export const ClientLogin: React.FC = () => {
             className="space-y-4"
           >
             <div className="flex items-center space-x-2">
-              <span className="bg-[#F5B942]/20 text-[#F5B942] border border-[#F5B942]/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest flex items-center">
+              <span className="bg-[#F5B942]/20 text-[#B45309] border border-[#F5B942]/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest flex items-center">
                 <Sparkles size={12} className="mr-1.5 animate-pulse" /> AI Powered Platform
               </span>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-gray-400 leading-tight">
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 leading-tight">
               ARJUN
             </h1>
-            <p className="text-xl text-gray-400 max-w-lg leading-relaxed">
+            <p className="text-xl text-slate-500 max-w-lg leading-relaxed">
               India's Intelligent Client Portal for Tax Filing, Invoicing, and CA Command Center integration.
             </p>
           </motion.div>
@@ -86,14 +86,14 @@ export const ClientLogin: React.FC = () => {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="flex space-x-4 items-start p-4 rounded-xl hover:bg-white/[0.02] border border-transparent hover:border-white/[0.04] transition-all group"
+                className="flex space-x-4 items-start p-4 rounded-xl hover:bg-slate-100/50 border border-transparent hover:border-slate-200/60 transition-all group"
               >
-                <div className="bg-[#F5B942]/10 border border-[#F5B942]/20 p-2.5 rounded-lg text-[#F5B942] group-hover:scale-110 transition-transform">
+                <div className="bg-[#F5B942]/10 border border-[#F5B942]/20 p-2.5 rounded-lg text-[#B45309] group-hover:scale-110 transition-transform">
                   <item.icon size={20} />
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-white tracking-wide">{item.text}</h3>
-                  <p className="text-sm text-gray-400 mt-1 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-base font-semibold text-slate-800 tracking-wide">{item.text}</h3>
+                  <p className="text-sm text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -105,22 +105,22 @@ export const ClientLogin: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, type: "spring" }}
-            className="w-full max-w-md bg-white/[0.03] backdrop-blur-[24px] border border-white/[0.08] p-8 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col justify-between"
+            className="w-full max-w-md bg-white border border-slate-200/80 p-8 rounded-2xl shadow-[0_8px_32px_0_rgba(15,23,42,0.06)] flex flex-col justify-between"
           >
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold font-cinzel text-white">Access Your Workspace</h2>
-                <p className="text-sm text-gray-400">Login securely to view active files and communicate with your CA.</p>
+                <h2 className="text-2xl font-bold font-cinzel text-slate-900">Access Your Workspace</h2>
+                <p className="text-sm text-slate-500">Login securely to view active files and communicate with your CA.</p>
               </div>
 
-              <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="h-px bg-slate-100" />
 
               <div className="space-y-4 py-4">
                 <motion.button
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center space-x-3 bg-white text-black py-3 px-4 rounded-xl font-semibold shadow-xl hover:bg-gray-100 transition-all"
+                  className="w-full flex items-center justify-center space-x-3 bg-slate-900 hover:bg-slate-800 text-white py-3 px-4 rounded-xl font-semibold shadow-md transition-all"
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path
@@ -146,9 +146,9 @@ export const ClientLogin: React.FC = () => {
             </div>
 
             <div className="space-y-4 mt-8">
-              <div className="h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span className="flex items-center"><Shield size={12} className="mr-1" /> End-to-End Encrypted</span>
+              <div className="h-px bg-slate-100" />
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span className="flex items-center"><Shield size={12} className="mr-1 text-[#34D399]" /> End-to-End Encrypted</span>
                 <span>Version 1.0.0</span>
               </div>
             </div>
