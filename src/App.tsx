@@ -10,6 +10,16 @@ import { QCReview } from './pages/QCReview'
 import { Communication } from './pages/Communication'
 import { Attendance } from './pages/Attendance'
 
+// Client Portal Pages
+import { ClientLogin } from './pages/portal/ClientLogin'
+import { PortalLayout } from './pages/portal/PortalLayout'
+import { ClientDashboard } from './pages/portal/ClientDashboard'
+import { ClientDocumentVault } from './pages/portal/ClientDocumentVault'
+import { ClientAITaxInsights } from './pages/portal/ClientAITaxInsights'
+import { ClientPayments } from './pages/portal/ClientPayments'
+import { ClientNotifications } from './pages/portal/ClientNotifications'
+import { ClientProfile } from './pages/portal/ClientProfile'
+
 function App() {
   return (
     <Router>
@@ -25,6 +35,18 @@ function App() {
           <Route path="messages" element={<Communication />} />
           <Route path="attendance" element={<Attendance />} />
         </Route>
+        
+        {/* Client Portal Routes */}
+        <Route path="/portal/login" element={<ClientLogin />} />
+        <Route path="/portal" element={<PortalLayout />}>
+          <Route index element={<ClientDashboard />} />
+          <Route path="documents" element={<ClientDocumentVault />} />
+          <Route path="ai" element={<ClientAITaxInsights />} />
+          <Route path="payments" element={<ClientPayments />} />
+          <Route path="notifications" element={<ClientNotifications />} />
+          <Route path="profile" element={<ClientProfile />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
