@@ -11,14 +11,14 @@ import { Communication } from './pages/Communication'
 import { Attendance } from './pages/Attendance'
 
 // Client Portal Pages
-import { ClientLogin } from './pages/portal/ClientLogin'
-import { PortalLayout } from './pages/portal/PortalLayout'
-import { ClientDashboard } from './pages/portal/ClientDashboard'
-import { ClientDocumentVault } from './pages/portal/ClientDocumentVault'
-import { ClientAITaxInsights } from './pages/portal/ClientAITaxInsights'
-import { ClientPayments } from './pages/portal/ClientPayments'
-import { ClientNotifications } from './pages/portal/ClientNotifications'
-import { ClientProfile } from './pages/portal/ClientProfile'
+import { ClientLogin } from './portal/auth/ClientLogin'
+import { PortalLayout } from './portal/layout/PortalLayout'
+import { ClientDashboard } from './portal/dashboard/ClientDashboard'
+import { ClientDocumentVault } from './portal/documents/ClientDocumentVault'
+import { ClientAITaxInsights } from './portal/ai/ClientAITaxInsights'
+import { ClientPayments } from './portal/payments/ClientPayments'
+import { ClientNotifications } from './portal/notifications/ClientNotifications'
+import { ClientProfile } from './portal/profile/ClientProfile'
 
 function App() {
   return (

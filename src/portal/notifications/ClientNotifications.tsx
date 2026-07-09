@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Info, ShieldAlert, Sparkles } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 export const ClientNotifications: React.FC = () => {
   const notifications = [
@@ -31,7 +31,6 @@ export const ClientNotifications: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <Bell className="mr-2 text-[#F5B942]" /> Notifications
@@ -39,7 +38,6 @@ export const ClientNotifications: React.FC = () => {
         <p className="text-sm text-gray-400 mt-1">Stay updated with instant actions requested by your CA or Arjun AI.</p>
       </div>
 
-      {/* Gmail-like list wrapper */}
       <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl overflow-hidden shadow-xl divide-y divide-white/[0.04]">
         {notifications.map((item) => (
           <div 
@@ -48,14 +46,12 @@ export const ClientNotifications: React.FC = () => {
               item.unread ? 'bg-white/[0.01]' : ''
             }`}
           >
-            {/* Status dot */}
             <div className="pt-1 shrink-0">
               <span className={`w-2.5 h-2.5 rounded-full block ${
                 item.unread ? 'bg-[#F5B942]' : 'bg-transparent'
               }`} />
             </div>
 
-            {/* Content info */}
             <div className="flex-1 space-y-1">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <h3 className={`text-sm tracking-wide ${item.unread ? 'font-bold text-white' : 'text-gray-300'}`}>

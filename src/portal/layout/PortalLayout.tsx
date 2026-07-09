@@ -3,9 +3,9 @@ import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, FolderArchive, Sparkles, CreditCard, Bell, 
-  User, LogOut, Menu, X, MessageSquare, Send, Award, FileText
+  User, LogOut, Menu, X
 } from 'lucide-react';
-import { FloatingArjun } from './FloatingArjun';
+import { FloatingArjun } from '../chat/FloatingArjun';
 
 interface PortalLayoutProps {
   children?: React.ReactNode;
@@ -53,10 +53,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
   return (
     <div className="min-h-screen bg-[#050816] text-[#F8FAFC] font-sans flex flex-col md:flex-row overflow-x-hidden pb-16 md:pb-0">
       
-      {/* Sidebar - Desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-white/[0.02] border-r border-white/[0.08] backdrop-blur-md p-6 justify-between shrink-0">
         <div className="space-y-8">
-          {/* Logo */}
           <div className="flex items-center space-x-3 py-2">
             <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 p-2 rounded-lg text-[#F5B942]">
               <Sparkles size={20} className="animate-pulse" />
@@ -64,7 +62,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
             <span className="text-xl font-bold font-cinzel tracking-widest text-white">ARJUN</span>
           </div>
 
-          {/* Navigation Links */}
           <nav className="space-y-1">
             {navigation.map((item) => {
               const active = isActive(item.path);
@@ -93,7 +90,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
           </nav>
         </div>
 
-        {/* User profile footer */}
         <div className="space-y-4 pt-6 border-t border-white/[0.08]">
           <div className="flex items-center space-x-3">
             <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-full border border-white/20" />
@@ -112,7 +108,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         </div>
       </aside>
 
-      {/* Header - Mobile */}
       <header className="md:hidden flex items-center justify-between bg-white/[0.02] border-b border-white/[0.08] backdrop-blur-md px-6 py-4 relative z-20">
         <div className="flex items-center space-x-3">
           <div className="bg-[#F5B942]/10 border border-[#F5B942]/30 p-1.5 rounded-lg text-[#F5B942]">
@@ -128,7 +123,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         </button>
       </header>
 
-      {/* Mobile Menu Dropdown */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -173,21 +167,17 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-h-0 relative">
-        {/* Desktop Header */}
         <header className="hidden md:flex items-center justify-between border-b border-white/[0.08] px-8 py-4 backdrop-blur-md">
           <div className="text-sm text-gray-400">
             Arjun CA Command Client Portal
           </div>
           <div className="flex items-center space-x-6">
-            {/* Header Notifications Icon */}
             <Link to="/portal/notifications" className="relative p-2 bg-white/[0.02] border border-white/[0.08] hover:bg-white/[0.04] rounded-xl text-gray-400 hover:text-white transition-all">
               <Bell size={18} />
               <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-[#EF4444] border-2 border-[#050816] rounded-full" />
             </Link>
             
-            {/* Google Avatar Indicator */}
             <div className="flex items-center space-x-3 pl-4 border-l border-white/[0.08]">
               <img src={user.avatar} alt="Google Avatar" className="w-8 h-8 rounded-full border border-white/20" />
               <span className="text-sm font-medium text-white">{user.name.split(' ')[0]}</span>
@@ -195,7 +185,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
           </div>
         </header>
 
-        {/* Content Render Outlet */}
         <div className="flex-1 overflow-y-auto p-6 md:p-8">
           <AnimatePresence mode="wait">
             <motion.div
@@ -212,10 +201,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = () => {
         </div>
       </main>
 
-      {/* Floating ChatGPT Assistant */}
       <FloatingArjun />
 
-      {/* Mobile Bottom Navigation (Banking App Style) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050816]/90 backdrop-blur-lg border-t border-white/[0.08] flex justify-around py-3 z-30">
         <Link to="/portal" className={`flex flex-col items-center space-y-1 ${isActive('/portal') && location.pathname === '/portal' ? 'text-[#F5B942]' : 'text-gray-500'}`}>
           <LayoutDashboard size={20} />

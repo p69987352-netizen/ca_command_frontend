@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  FolderArchive, AlertCircle, FileText, CheckCircle2, 
-  Clock, ArrowUpRight, TrendingUp, ShieldAlert, Sparkles, UserCheck
+  FolderArchive, AlertCircle, FileText, 
+  Clock, ArrowUpRight, TrendingUp, Sparkles
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -57,8 +57,6 @@ export const ClientDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      
-      {/* Header and Welcome */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
@@ -78,10 +76,7 @@ export const ClientDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of Metrics and Tax Health Score */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Metric Cards - Left Columns */}
         <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {metrics.map((card, idx) => {
             const Icon = card.icon;
@@ -105,7 +100,6 @@ export const ClientDashboard: React.FC = () => {
           })}
         </div>
 
-        {/* Tax Health Score Card - Right Columns */}
         <div className="lg:col-span-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -118,10 +112,8 @@ export const ClientDashboard: React.FC = () => {
                 <span className="text-xs bg-[#34D399]/15 text-[#34D399] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wide">Excellent</span>
               </div>
               
-              {/* Circular Gauge / Score representation */}
               <div className="flex items-center justify-center py-6">
                 <div className="relative flex items-center justify-center">
-                  {/* Outer circle */}
                   <svg className="w-24 h-24 transform -rotate-90">
                     <circle cx="48" cy="48" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="6" fill="transparent" />
                     <circle cx="48" cy="48" r="40" stroke="#34D399" strokeWidth="6" fill="transparent"
@@ -137,7 +129,6 @@ export const ClientDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Micro checklist */}
             <div className="space-y-2 border-t border-white/[0.06] pt-4 text-xs">
               <div className="flex items-center text-gray-300">
                 <span className="w-1.5 h-1.5 bg-[#34D399] rounded-full mr-2" />
@@ -158,13 +149,9 @@ export const ClientDashboard: React.FC = () => {
             </div>
           </motion.div>
         </div>
-
       </div>
 
-      {/* Main Grid: Active Case Tracker & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Left Side: Active Case Tracker Card */}
         <div className="lg:col-span-8 space-y-6">
           <h2 className="text-lg font-semibold text-white tracking-wide flex items-center">
             <Clock size={16} className="mr-2 text-[#F5B942]" /> Active Case Tracker
@@ -180,7 +167,6 @@ export const ClientDashboard: React.FC = () => {
               </span>
             </div>
 
-            {/* Custom Premium progress bar */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
                 <span>Filing Progress</span>
@@ -196,7 +182,6 @@ export const ClientDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* CA & ETA Footer Details */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4 border-t border-white/[0.06] text-xs">
               <div>
                 <span className="text-gray-500 block mb-1">Assigned CA</span>
@@ -226,7 +211,6 @@ export const ClientDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Side: Recent Activity Timeline */}
         <div className="lg:col-span-4 space-y-6">
           <h2 className="text-lg font-semibold text-white tracking-wide flex items-center">
             <TrendingUp size={16} className="mr-2 text-[#34D399]" /> Activity Flow
@@ -235,12 +219,10 @@ export const ClientDashboard: React.FC = () => {
             <div className="relative pl-6 space-y-6 border-l border-white/[0.06]">
               {timeline.map((act, idx) => (
                 <div key={idx} className="relative">
-                  {/* Dot indicator */}
                   <span className={`absolute left-[-31px] top-1.5 w-2.5 h-2.5 rounded-full ring-4 ring-[#050816] ${
                     act.status === 'success' ? 'bg-[#34D399]' : 'bg-[#F5B942]'
                   }`} />
                   
-                  {/* Text details */}
                   <div className="space-y-0.5">
                     <h4 className="text-xs font-semibold text-white">{act.label}</h4>
                     <span className="text-[10px] text-gray-500 block">{act.time}</span>
@@ -250,9 +232,7 @@ export const ClientDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

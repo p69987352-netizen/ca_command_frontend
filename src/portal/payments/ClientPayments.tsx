@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { CreditCard, Receipt, FileText, Download, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export const ClientPayments: React.FC = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const handlePayment = () => {
-    // Simulate successful payment action
     setTimeout(() => {
       setPaymentSuccess(true);
       alert("Payment settled successfully via portal checkout gateway!");
@@ -21,7 +19,6 @@ export const ClientPayments: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <CreditCard className="mr-2 text-[#F5B942]" /> Payments & Billing
@@ -30,8 +27,6 @@ export const ClientPayments: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Receipt / Invoice Details Card (Left Column) */}
         <div className="lg:col-span-8">
           <div className="bg-white/[0.02] border border-white/[0.08] p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
@@ -53,7 +48,6 @@ export const ClientPayments: React.FC = () => {
               </span>
             </div>
 
-            {/* List items */}
             <div className="space-y-4">
               {invoiceItems.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
@@ -67,13 +61,11 @@ export const ClientPayments: React.FC = () => {
 
             <div className="h-px bg-white/[0.08]" />
 
-            {/* Total Row */}
             <div className="flex justify-between items-center text-base font-bold">
               <span className="text-white">Amount Due</span>
               <span className="text-2xl text-[#F5B942] font-mono">₹5,200</span>
             </div>
 
-            {/* Pay Button / Completed alert */}
             <div className="pt-4">
               {paymentSuccess ? (
                 <div className="flex items-center justify-center space-x-2 bg-[#34D399]/10 border border-[#34D399]/20 p-4 rounded-xl text-[#34D399]">
@@ -92,7 +84,6 @@ export const ClientPayments: React.FC = () => {
           </div>
         </div>
 
-        {/* Info Column (Right Side) */}
         <div className="lg:col-span-4 space-y-6">
           <h2 className="text-base font-semibold text-white tracking-wide">Locker Details</h2>
           <div className="bg-white/[0.02] border border-white/[0.08] p-6 rounded-2xl space-y-4 text-xs shadow-md">
@@ -112,9 +103,7 @@ export const ClientPayments: React.FC = () => {
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

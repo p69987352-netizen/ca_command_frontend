@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, ShieldCheck, HelpCircle, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { Sparkles, ShieldCheck } from 'lucide-react';
 
 export const ClientAITaxInsights: React.FC = () => {
   const incomes = [
@@ -13,8 +12,6 @@ export const ClientAITaxInsights: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <Sparkles className="mr-2 text-[#F5B942] animate-pulse" /> AI Tax Insights
@@ -22,7 +19,6 @@ export const ClientAITaxInsights: React.FC = () => {
         <p className="text-sm text-gray-400 mt-1">Cross-referencing your AIS, TIS, and banking transactions using LLM analysis.</p>
       </div>
 
-      {/* Overview stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white/[0.02] border border-white/[0.08] p-5 rounded-2xl">
           <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Assessment Status</span>
@@ -44,10 +40,7 @@ export const ClientAITaxInsights: React.FC = () => {
         </div>
       </div>
 
-      {/* Main insights columns */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Stripe-like Income Table (Left Column) */}
         <div className="lg:col-span-8 space-y-4">
           <h2 className="text-base font-semibold text-white tracking-wide">Filing Income Classification</h2>
           <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl overflow-hidden shadow-lg">
@@ -72,7 +65,6 @@ export const ClientAITaxInsights: React.FC = () => {
           </div>
         </div>
 
-        {/* Recommended ITR Details (Right Column) */}
         <div className="lg:col-span-4 space-y-6">
           <h2 className="text-base font-semibold text-white tracking-wide">Form Recommendation Rationale</h2>
           
@@ -107,9 +99,7 @@ export const ClientAITaxInsights: React.FC = () => {
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

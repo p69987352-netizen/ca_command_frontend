@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, LayoutGrid, Sparkles, CreditCard, MessageSquare, ArrowRight } from 'lucide-react';
+import { Shield, LayoutGrid, Sparkles, CreditCard, MessageSquare } from 'lucide-react';
 
 export const ClientLogin: React.FC = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    // Save dummy token and user info
     localStorage.setItem('portal_token', 'dummy-client-token');
     localStorage.setItem('portal_user', JSON.stringify({
       name: 'Bhanu Pratap Singh',
@@ -29,11 +28,9 @@ export const ClientLogin: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-[#050816] text-[#F8FAFC] font-sans flex items-center justify-center overflow-hidden p-6">
-      {/* Background Animated Gradient Blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#F5B942]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#34D399]/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Floating Particles Simulation */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -62,8 +59,6 @@ export const ClientLogin: React.FC = () => {
       </div>
 
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-        
-        {/* Left Columns - Features Info */}
         <div className="lg:col-span-7 space-y-8">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -105,7 +100,6 @@ export const ClientLogin: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Columns - Google Login Card */}
         <div className="lg:col-span-5 flex justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -121,7 +115,6 @@ export const ClientLogin: React.FC = () => {
 
               <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-              {/* Login Button Container */}
               <div className="space-y-4 py-4">
                 <motion.button
                   whileHover={{ scale: 1.02, y: -1 }}
@@ -162,7 +155,6 @@ export const ClientLogin: React.FC = () => {
 
           </motion.div>
         </div>
-
       </div>
     </div>
   );

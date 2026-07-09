@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FolderArchive, UploadCloud, Eye, Download, AlertCircle, 
-  CheckCircle2, FileText, Trash2, Calendar
+  FolderArchive, UploadCloud, Eye, Download, 
+  FileText
 } from 'lucide-react';
 
 interface DocumentItem {
@@ -49,7 +49,6 @@ export const ClientDocumentVault: React.FC = () => {
           clearInterval(interval);
           setTimeout(() => {
             setUploadProgress(null);
-            // Add new document
             const newDoc: DocumentItem = {
               id: Date.now().toString(),
               name: 'PAN Card (Scanned Copy).pdf',
@@ -70,7 +69,6 @@ export const ClientDocumentVault: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <FolderArchive className="mr-2 text-[#F5B942]" /> Document Vault
@@ -78,7 +76,6 @@ export const ClientDocumentVault: React.FC = () => {
         <p className="text-sm text-gray-400 mt-1">Upload and manage secure tax documents mapped to your WhatsApp feed.</p>
       </div>
 
-      {/* Fiscal Year Tabs */}
       <div className="flex space-x-2 bg-white/[0.02] border border-white/[0.08] p-1 rounded-xl w-fit">
         {['FY 2024-25', 'FY 2025-26', 'FY 2026-27'].map((fy) => (
           <button
@@ -94,7 +91,6 @@ export const ClientDocumentVault: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Document List - Left Column */}
         <div className="lg:col-span-7 space-y-4">
           {documents.map((doc) => (
             <motion.div
@@ -118,7 +114,6 @@ export const ClientDocumentVault: React.FC = () => {
                 </div>
               </div>
 
-              {/* Action buttons */}
               <div className="flex items-center space-x-2">
                 {doc.status === 'uploaded' ? (
                   <>
@@ -142,7 +137,6 @@ export const ClientDocumentVault: React.FC = () => {
           ))}
         </div>
 
-        {/* Drag Drop Upload Zone - Right Column */}
         <div className="lg:col-span-5">
           <div
             onDragOver={handleDragOver}
@@ -191,9 +185,7 @@ export const ClientDocumentVault: React.FC = () => {
             </AnimatePresence>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };

@@ -27,7 +27,6 @@ export const FloatingArjun: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
 
-    // Simulated responses based on input keywords
     setTimeout(() => {
       let replyText = "I'm analyzing your request. For specific ITR calculations, please check the 'AI Tax Insights' tab.";
       const query = inputValue.toLowerCase();
@@ -59,7 +58,6 @@ export const FloatingArjun: React.FC = () => {
             transition={{ type: "spring", stiffness: 260, damping: 25 }}
             className="w-96 h-[480px] bg-[#0B0F19]/90 backdrop-blur-[24px] border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col overflow-hidden mb-4"
           >
-            {/* Header */}
             <div className="px-6 py-4 bg-white/[0.02] border-b border-white/[0.08] flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 rounded-lg bg-[#F5B942]/10 border border-[#F5B942]/30 flex items-center justify-center text-[#F5B942]">
@@ -80,7 +78,6 @@ export const FloatingArjun: React.FC = () => {
               </button>
             </div>
 
-            {/* Message Pane */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
               {messages.map((msg, idx) => (
                 <div
@@ -101,7 +98,6 @@ export const FloatingArjun: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Footer */}
             <div className="p-4 bg-white/[0.01] border-t border-white/[0.08] flex items-center space-x-2">
               <input
                 type="text"
@@ -118,12 +114,10 @@ export const FloatingArjun: React.FC = () => {
                 <Send size={16} />
               </button>
             </div>
-
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Launcher Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

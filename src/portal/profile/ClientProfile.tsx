@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { User, ShieldAlert, Key, Eye, EyeOff, Save, CheckCircle } from 'lucide-react';
+import { User, ShieldAlert, Key, Eye, EyeOff, Save } from 'lucide-react';
 
 export const ClientProfile: React.FC = () => {
   const [user, setUser] = useState<{ name: string; email: string; phone: string; pan: string } | null>(null);
@@ -23,7 +22,6 @@ export const ClientProfile: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <User className="mr-2 text-[#F5B942]" /> My Profile & Locker
@@ -32,8 +30,6 @@ export const ClientProfile: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Profile Info - Left Columns */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white/[0.02] border border-white/[0.08] p-6 rounded-2xl shadow-xl space-y-6">
             <h2 className="text-base font-semibold text-white tracking-wide border-b border-white/[0.06] pb-3">User Details</h2>
@@ -67,7 +63,6 @@ export const ClientProfile: React.FC = () => {
           </div>
         </div>
 
-        {/* Encrypted Portal Locker - Right Columns */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white/[0.02] border border-white/[0.08] p-6 rounded-2xl shadow-xl space-y-6">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
@@ -124,12 +119,9 @@ export const ClientProfile: React.FC = () => {
                 Credentials are AES-256 encrypted in transit and at rest. These are only visible to your assigned CA during document uploads.
               </p>
             </div>
-
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };
