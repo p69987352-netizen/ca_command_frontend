@@ -72,6 +72,13 @@ export const ClientDashboard: React.FC = () => {
     }
   ]);
 
+  const metrics = [
+    { title: 'Active Cases', value: cases.length.toString(), icon: FileText, color: 'text-[#F5B942]' },
+    { title: 'Documents Uploaded', value: '18', icon: FolderArchive, color: 'text-[#34D399]' },
+    { title: 'Pending Action', value: cases.filter(c => c.status !== 'COMPLETED').length.toString(), icon: AlertCircle, color: 'text-[#EF4444]' },
+    { title: 'Estimated Refund', value: '₹14,500', icon: TrendingUp, color: 'text-[#34D399]' }
+  ];
+
   useEffect(() => {
     const storedUser = localStorage.getItem('portal_user');
     if (storedUser) {
