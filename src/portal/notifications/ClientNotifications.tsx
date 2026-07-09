@@ -8,29 +8,47 @@ export const ClientNotifications: React.FC = () => {
       title: 'CA Uploaded Assessment Report', 
       desc: 'Your designated accountant Rahul Sharma has uploaded the verified calculation worksheet for capital gains.', 
       time: 'Today, 11:30 AM', 
-      unread: true, 
-      type: 'info' 
+      unread: true 
     },
     { 
       id: '2', 
       title: 'Form 16 Document Needed', 
       desc: 'Please submit your employer Form 16 in the Document Vault to complete the Salary Income calculations.', 
       time: 'Yesterday, 04:15 PM', 
-      unread: true, 
-      type: 'action' 
+      unread: true 
     },
     { 
       id: '3', 
+      title: 'File Assigned to Staff member', 
+      desc: 'Your active file CASE-250701 has been assigned to staff member Rahul Sharma. Processing has started.', 
+      time: 'Today, 10:00 AM', 
+      unread: true 
+    },
+    { 
+      id: '4', 
+      title: 'Query Call Status: Call Pending', 
+      desc: 'A CA has scheduled an expert call with you to verify bank transaction deductions.', 
+      time: 'Yesterday, 02:00 PM', 
+      unread: true 
+    },
+    { 
+      id: '5', 
+      title: 'Query Call Status: Call Completed', 
+      desc: 'Call successfully completed with Rahul Sharma regarding your stock capital gains breakdown.', 
+      time: '3 days ago', 
+      unread: false 
+    },
+    { 
+      id: '6', 
       title: 'Refund Processed', 
       desc: 'Assessment filed successfully. The Income Tax Department has approved a refund amount of ₹14,500.', 
-      time: '2 days ago', 
-      unread: false, 
-      type: 'success' 
+      time: '4 days ago', 
+      unread: false 
     }
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12">
+    <div className="space-y-8 animate-fade-in pb-12 text-[#F8FAFC]">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <Bell className="mr-2 text-[#F5B942]" /> Notifications

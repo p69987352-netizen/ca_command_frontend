@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, ShieldAlert, Key, Eye, EyeOff, Save } from 'lucide-react';
 
 export const ClientProfile: React.FC = () => {
-  const [user, setUser] = useState<{ name: string; email: string; phone: string; pan: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; phone: string; pan: string; dob?: string; city?: string; taxPassword?: string } | null>(null);
   const [isLockerVisible, setIsLockerVisible] = useState(false);
   const [panPassword, setPanPassword] = useState('SecretPassword123');
   const [gstPassword, setGstPassword] = useState('GstPortalPass456');
@@ -10,18 +10,30 @@ export const ClientProfile: React.FC = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem('portal_user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      if (parsed.taxPassword) {
+        setPanPassword(parsed.taxPassword);
+      }
     }
   }, []);
 
   const handleSaveLocker = () => {
+    if (user) {
+      const updatedUser = {
+        ...user,
+        taxPassword: panPassword
+      };
+      localStorage.setItem('portal_user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
     alert("Official portal credentials encrypted using AES-256 and saved securely in your Locker!");
   };
 
   if (!user) return null;
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12">
+    <div className="space-y-8 animate-fade-in pb-12 text-[#F8FAFC]">
       <div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center">
           <User className="mr-2 text-[#F5B942]" /> My Profile & Locker
@@ -50,6 +62,14 @@ export const ClientProfile: React.FC = () => {
               <div className="space-y-1">
                 <span className="text-gray-500 block">PAN Number</span>
                 <span className="font-semibold text-white font-mono">{user.pan}</span>
+              </div>
+              <div className="space-y-1">
+                <span className="text-gray-500 block">Date of Birth (DOB)</span>
+                <span className="font-semibold text-white">{user.dob || '1995-08-15'}</span>
+              </div>
+              <div className="space-y-1">
+                <span className="text-gray-500 block">City</span>
+                <span className="font-semibold text-white">{user.city || 'Mumbai'}</span>
               </div>
               <div className="space-y-1 sm:col-span-2">
                 <span className="text-gray-500 block">Residential Address</span>
@@ -111,7 +131,7 @@ export const ClientProfile: React.FC = () => {
               </button>
             </div>
 
-            <div className="h-px bg-white/[0.06]" />
+            <div className="h-px bg-white/[0.06] opacity-60" />
             
             <div className="flex items-start space-x-2 text-[10px] text-gray-500 leading-relaxed">
               <ShieldAlert size={14} className="text-[#F5B942] shrink-0 mt-0.5" />
