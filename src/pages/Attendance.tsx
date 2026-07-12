@@ -15,6 +15,7 @@ interface AttendanceRecord {
   locationLink: string;
   exitPhotoUrl?: string;
   exitTime?: string;
+  exitTimeIso?: string;
   exitLocationLink?: string;
   isVerifiedEntry?: boolean;
   isVerifiedExit?: boolean;
@@ -338,7 +339,7 @@ export const Attendance: React.FC = () => {
                             <div className="flex items-center space-x-2">
                               <span className="text-[10px] text-gray-500 w-8">OUT:</span>
                               {record.exitTime ? (
-                                <span>{formatWallClockTime(record.exitTime)}</span>
+                                <span>{formatWallClockTime(record.exitTimeIso || record.exitTime)}</span>
                               ) : (
                                 <span className="text-xs text-gray-500 italic">Not Yet</span>
                               )}
