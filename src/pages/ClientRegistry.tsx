@@ -25,6 +25,7 @@ export const ClientRegistry: React.FC = () => {
   const [dob, setDob] = useState('');
   const [itPassword, setItPassword] = useState('');
   const [serviceType, setServiceType] = useState('ITR Filing');
+  const [customServiceType, setCustomServiceType] = useState('');
   const [documents, setDocuments] = useState<{ id: string; docName: string; customName: string; file: File | null }[]>([
     { id: '1', docName: 'PAN Card', customName: '', file: null }
   ]);
@@ -54,7 +55,8 @@ export const ClientRegistry: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phoneNumber || !city || !pan || !dob || !itPassword || !serviceType) {
+    const finalServiceType = serviceType === 'Other' ? customServiceType : serviceType;
+    if (!name || !phoneNumber || !city || !pan || !dob || !itPassword || !finalServiceType) {
       setErrorMsg('Please fill in all client details.');
       return;
     }
@@ -69,7 +71,7 @@ export const ClientRegistry: React.FC = () => {
       formData.append('pan', pan);
       formData.append('dob', dob);
       formData.append('itPassword', itPassword);
-      formData.append('serviceType', serviceType);
+      formData.append('serviceType', finalServiceType);
 
       documents.forEach(doc => {
         if (doc.file) {
@@ -90,6 +92,7 @@ export const ClientRegistry: React.FC = () => {
       setDob('');
       setItPassword('');
       setServiceType('ITR Filing');
+      setCustomServiceType('');
       setDocuments([{ id: '1', docName: 'PAN Card', customName: '', file: null }]);
       
       // Refresh list
@@ -307,8 +310,23 @@ export const ClientRegistry: React.FC = () => {
                 <option value="GST Services" className="bg-saas-bgSecondary">GST Services</option>
                 <option value="Tax Notice / Appeal" className="bg-saas-bgSecondary">Tax Notice / Appeal</option>
                 <option value="Tax Advisory" className="bg-saas-bgSecondary">Tax Advisory</option>
+                <option value="Other" className="bg-saas-bgSecondary">Other (Manual Type)...</option>
               </select>
             </div>
+
+            {serviceType === 'Other' && (
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-saas-muted uppercase tracking-wider mb-2">Enter Custom Service / Task Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Audit Remaining, Loan Filing Trip"
+                  value={customServiceType}
+                  onChange={(e) => setCustomServiceType(e.target.value)}
+                  className="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-saas-primary text-sm"
+                  required
+                />
+              </div>
+            )}
           </div>
 
           <div className="border-t border-white/10 pt-4">

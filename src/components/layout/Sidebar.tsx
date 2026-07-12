@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { name: 'Command Center', icon: LayoutDashboard, path: '/dashboard' },
+  { name: 'SPC - CC', icon: LayoutDashboard, path: '/dashboard' },
   { name: 'Client Registry', icon: Users, path: '/dashboard/clients' },
   { name: 'Manage Staff', icon: Users, path: '/dashboard/staff' },
   { name: 'Attendance', icon: CalendarClock, path: '/dashboard/attendance' },
@@ -48,9 +48,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, setIsMobileOpen 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="font-serif font-bold text-3xl bronze-gradient-text tracking-widest truncate uppercase"
+              className="font-serif font-bold text-2xl bronze-gradient-text tracking-widest truncate uppercase"
             >
-              C\A
+              SPC - CC
             </motion.div>
           )}
         </AnimatePresence>

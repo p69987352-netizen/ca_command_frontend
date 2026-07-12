@@ -19,6 +19,8 @@ interface AppState {
   getStaffDocumentUrl: (ticketId: string) => Promise<string>;
   requestChanges: (ticketId: string, changeRequest: string) => Promise<void>;
   requestCredentials: (ticketId: string, label: string) => Promise<void>;
+  deleteTicket: (ticketId: string) => Promise<void>;
+  createTask: (payload: { clientName: string; clientPhoneNumber: string; serviceType: string; assignedStaffId: string; notes: string; files?: File[]; fileNames?: string[] }) => Promise<void>;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -74,6 +76,16 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   requestCredentials: async (ticketId, label) => {
     await apiClient.requestCredentials(ticketId, label);
+    await get().fetchData();
+  },
+
+  deleteTicket: async (ticketId) => {
+    await apiClient.deleteTicket(ticketId);
+    await get().fetchData();
+  },
+
+  createTask: async (payload) => {
+    await apiClient.createTask(payload);
     await get().fetchData();
   }
 }));

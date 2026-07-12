@@ -6,6 +6,9 @@ export interface Client {
   pinCode?: string;
   clientType?: string;
   incomeRange?: string;
+  pan?: string;
+  dob?: string;
+  itPassword?: string;
 }
 
 export interface Staff {

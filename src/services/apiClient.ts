@@ -30,7 +30,7 @@ export const apiClient = {
   createClientWithDocuments: async (formData: FormData) => {
     const response = await api.post('/admin/clients/create-with-documents', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': undefined,
       },
     });
     return response.data;
@@ -134,6 +134,10 @@ export const apiClient = {
     const response = await api.get('/admin/staff/attendance/today');
     return response.data;
   },
+  updateAttendanceLocation: async (attendanceId: string, payload: { locationLink?: string; exitLocationLink?: string }) => {
+    const response = await api.put(`/admin/staff/attendance/${attendanceId}/location`, payload);
+    return response.data;
+  },
   fetchAttendanceByDate: async (date: string) => {
     const response = await api.get(`/admin/staff/attendance/date/${date}`);
     return response.data;
@@ -142,8 +146,8 @@ export const apiClient = {
     const response = await api.get(`/admin/staff/attendance/month/${year}/${month}`);
     return response.data;
   },
-  sendAttendanceReminders: async () => {
-    const response = await api.post('/admin/staff/remind-attendance');
+  sendAttendanceReminders: async (staffIds?: string[]) => {
+    const response = await api.post('/admin/staff/remind-attendance', staffIds ? { staffIds } : {});
     return response.data;
   },
   generateAttendanceReport: async () => {
@@ -160,6 +164,34 @@ export const apiClient = {
   },
   getStaffPerformance: async (staffId: string) => {
     const response = await api.get(`/admin/staff/${staffId}/performance`);
+    return response.data;
+  },
+  deleteTicket: async (ticketId: string): Promise<void> => {
+    await api.delete(`/admin/tickets/${ticketId}`);
+  },
+  createTask: async (payload: { clientName: string; clientPhoneNumber: string; serviceType: string; assignedStaffId: string; notes: string; files?: File[]; fileNames?: string[] }): Promise<Ticket> => {
+    const formData = new FormData();
+    formData.append('clientName', payload.clientName);
+    formData.append('clientPhoneNumber', payload.clientPhoneNumber);
+    formData.append('serviceType', payload.serviceType);
+    formData.append('assignedStaffId', payload.assignedStaffId);
+    if (payload.notes) formData.append('notes', payload.notes);
+    if (payload.files && payload.files.length > 0) {
+      payload.files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    if (payload.fileNames && payload.fileNames.length > 0) {
+      payload.fileNames.forEach(name => {
+        formData.append('fileNames', name);
+      });
+    }
+
+    const response = await api.post('/admin/tickets/create-task', formData, {
+      headers: {
+        'Content-Type': undefined,
+      },
+    });
     return response.data;
   }
 };
