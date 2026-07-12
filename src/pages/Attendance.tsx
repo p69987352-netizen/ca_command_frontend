@@ -24,20 +24,12 @@ interface AttendanceRecord {
 const formatWallClockTime = (timeStr: string | undefined): string => {
   if (!timeStr) return '-';
   try {
-    if (timeStr.includes('T')) {
-      const timePart = timeStr.split('T')[1];
-      const [hoursStr, minutesStr] = timePart.split(':');
-      const hours = parseInt(hoursStr, 10);
-      const minutes = parseInt(minutesStr, 10);
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 === 0 ? 12 : hours % 12;
-      const displayMinutes = minutes < 10 ? `0${minutes}` : minutes;
-      return `${displayHours.toString().padStart(2, '0')}:${displayMinutes} ${ampm}`;
-    }
-    return new Date(timeStr).toLocaleTimeString('en-US', {
+    const date = new Date(timeStr);
+    return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
+      timeZone: 'Asia/Kolkata'
     });
   } catch (e) {
     return '-';
@@ -47,11 +39,19 @@ const formatWallClockTime = (timeStr: string | undefined): string => {
 const isLateCheckIn = (timeStr: string | undefined): boolean => {
   if (!timeStr) return false;
   try {
-    if (timeStr.includes('T')) {
-      const timePart = timeStr.split('T')[1];
-      const [hoursStr, minutesStr] = timePart.split(':');
-      const hours = parseInt(hoursStr, 10);
-      const minutes = parseInt(minutesStr, 10);
+    const date = new Date(timeStr);
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false,
+      timeZone: 'Asia/Kolkata'
+    });
+    const parts = formatter.formatToParts(date);
+    const hoursPart = parts.find(p => p.type === 'hour');
+    const minutesPart = parts.find(p => p.type === 'minute');
+    if (hoursPart && minutesPart) {
+      const hours = parseInt(hoursPart.value, 10);
+      const minutes = parseInt(minutesPart.value, 10);
       return hours > 10 || (hours === 10 && minutes > 30);
     }
   } catch (e) {}
