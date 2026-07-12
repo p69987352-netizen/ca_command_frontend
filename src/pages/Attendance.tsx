@@ -24,7 +24,11 @@ interface AttendanceRecord {
 const formatWallClockTime = (timeStr: string | undefined): string => {
   if (!timeStr) return '-';
   try {
-    const date = new Date(timeStr);
+    let normalized = timeStr;
+    if (!timeStr.endsWith('Z') && !timeStr.includes('+') && !timeStr.includes('-')) {
+      normalized = timeStr + 'Z';
+    }
+    const date = new Date(normalized);
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
@@ -39,7 +43,11 @@ const formatWallClockTime = (timeStr: string | undefined): string => {
 const isLateCheckIn = (timeStr: string | undefined): boolean => {
   if (!timeStr) return false;
   try {
-    const date = new Date(timeStr);
+    let normalized = timeStr;
+    if (!timeStr.endsWith('Z') && !timeStr.includes('+') && !timeStr.includes('-')) {
+      normalized = timeStr + 'Z';
+    }
+    const date = new Date(normalized);
     const formatter = new Intl.DateTimeFormat('en-US', {
       hour: 'numeric',
       minute: 'numeric',
