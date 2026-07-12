@@ -20,6 +20,43 @@ interface AttendanceRecord {
   isVerifiedExit?: boolean;
 }
 
+const formatWallClockTime = (timeStr: string | undefined): string => {
+  if (!timeStr) return '-';
+  try {
+    if (timeStr.includes('T')) {
+      const timePart = timeStr.split('T')[1];
+      const [hoursStr, minutesStr] = timePart.split(':');
+      const hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+      const displayMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      return `${displayHours.toString().padStart(2, '0')}:${displayMinutes} ${ampm}`;
+    }
+    return new Date(timeStr).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  } catch (e) {
+    return '-';
+  }
+};
+
+const isLateCheckIn = (timeStr: string | undefined): boolean => {
+  if (!timeStr) return false;
+  try {
+    if (timeStr.includes('T')) {
+      const timePart = timeStr.split('T')[1];
+      const [hoursStr, minutesStr] = timePart.split(':');
+      const hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+      return hours > 10 || (hours === 10 && minutes > 30);
+    }
+  } catch (e) {}
+  return false;
+};
+
 export const Attendance: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'today' | 'calendar' | 'monthly'>('today');
   const [staffList, setStaffList] = useState<Staff[]>([]);
@@ -288,36 +325,12 @@ export const Attendance: React.FC = () => {
                             <span className="text-[10px] text-gray-500 w-8">IN:</span>
                             {record.createdAt ? (
                               <>
-                                <span>
-                                  {(() => {
-                                    const targetTime = record.createdAtIso || record.createdAt;
-                                    const normalized = (targetTime.endsWith('Z') || targetTime.includes('+') || targetTime.includes('-')) 
-                                      ? targetTime 
-                                      : targetTime + 'Z';
-                                    return new Date(normalized).toLocaleTimeString('en-US', {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                      hour12: true
-                                    });
-                                  })()}
-                                </span>
-                                {(() => {
-                                  const targetTime = record.createdAtIso || record.createdAt;
-                                  const normalized = (targetTime.endsWith('Z') || targetTime.includes('+') || targetTime.includes('-')) 
-                                    ? targetTime 
-                                    : targetTime + 'Z';
-                                  const date = new Date(normalized);
-                                  const hours = date.getHours();
-                                  const minutes = date.getMinutes();
-                                  if (hours > 10 || (hours === 10 && minutes > 30)) {
-                                    return (
-                                      <span className="text-[10px] text-red-400 font-bold">
-                                        ⚠️ LATE
-                                      </span>
-                                    );
-                                  }
-                                  return null;
-                                })()}
+                                <span>{formatWallClockTime(record.createdAtIso || record.createdAt)}</span>
+                                {isLateCheckIn(record.createdAtIso || record.createdAt) && (
+                                  <span className="text-[10px] text-red-400 font-bold ml-1.5">
+                                    ⚠️ LATE
+                                  </span>
+                                )}
                               </>
                             ) : '-'}
                           </div>
@@ -325,19 +338,7 @@ export const Attendance: React.FC = () => {
                             <div className="flex items-center space-x-2">
                               <span className="text-[10px] text-gray-500 w-8">OUT:</span>
                               {record.exitTime ? (
-                                <span>
-                                  {(() => {
-                                    const targetTime = record.exitTime;
-                                    const normalized = (targetTime.endsWith('Z') || targetTime.includes('+') || targetTime.includes('-')) 
-                                      ? targetTime 
-                                      : targetTime + 'Z';
-                                    return new Date(normalized).toLocaleTimeString('en-US', {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                      hour12: true
-                                    });
-                                  })()}
-                                </span>
+                                <span>{formatWallClockTime(record.exitTime)}</span>
                               ) : (
                                 <span className="text-xs text-gray-500 italic">Not Yet</span>
                               )}
